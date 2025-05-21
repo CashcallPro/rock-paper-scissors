@@ -1,7 +1,6 @@
 "use client";
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Socket } from 'socket.io-client';
 import { Choice, ServerResult, GamePhase, choiceEmojis, MatchFoundData, RoundResultData, OpponentMadeChoiceData, API_URL_BOT_SCORE, SOCKET_SERVER_URL } from '../lib'; // Assuming index.ts in lib exports all
 import { useSocketConnection } from './useSocketConnection';
 import { useTurnTimer } from './useTurnTimer';

@@ -1,16 +1,14 @@
 "use client";
 import Head from 'next/head';
-import { Button } from 'primereact/button'; // For Exit Game button
-
 import { useScreenHeight } from '../hooks/useScreenHeight';
 import { useGameLogic } from '../hooks/useGameLogic';
-
 import { StartScreen } from '../components/game/StartScreen';
 import { SearchingScreen } from '../components/game/SearchingScreen';
 import { OpponentFoundScreen } from '../components/game/OpponentFoundScreen';
 import { JoiningScreen } from '../components/game/JoiningScreen';
 import { PlayingScreen } from '../components/game/PlayingScreen';
 import Image from 'next/image';
+import { Suspense } from 'react';
 
 // Ensure animate-pop is defined in your global CSS if not using a utility for it
 // styles/globals.css or equivalent:
@@ -21,7 +19,7 @@ import Image from 'next/image';
 // }
 // .animate-pop { animation: pop 0.5s ease-in-out; }
 
-export default function GamePage() {
+function GamePageContent() {
   const screenHeight = useScreenHeight();
   const {
     gamePhase, username, myServerConfirmedUsername, opponentUsername,
@@ -36,8 +34,11 @@ export default function GamePage() {
 
 
   const renderGameContent = () => {
+
     switch (gamePhase) {
+
       case 'start':
+        console.log(turnTimerDuration)
         return (
           <StartScreen
             username={username}
@@ -122,5 +123,15 @@ export default function GamePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    // Wrap the component that uses useSearchParams (indirectly via useGameLogic)
+    // in a Suspense boundary.
+    <Suspense fallback={<div>Loading page details...</div>}> {/* Or any loading UI */}
+      <GamePageContent />
+    </Suspense>
   );
 }
