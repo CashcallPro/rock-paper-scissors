@@ -242,7 +242,7 @@ export function useGameLogic() {
       const scoreData = {
         clientInlineMessageId: inlineMessageId,
         userId: userId,
-        score: longestStreak,
+        score: yourScore,
       };
       try {
         await fetch(API_URL_BOT_SCORE, {
