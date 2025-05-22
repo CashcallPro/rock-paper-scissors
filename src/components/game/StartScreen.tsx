@@ -3,7 +3,7 @@ import { InputText } from 'primereact/inputtext';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import Image from 'next/image';
-import { UserProfile } from '@/lib';
+import { SOCKET_SERVER_URL, UserProfile } from '@/lib';
 
 interface StartScreenProps {
   username: string;
@@ -31,7 +31,7 @@ export function StartScreen({
 
   useEffect(() => {
 
-    fetch(`${process.env.API_URL}/users/${queryUsername}`)
+    fetch(`${SOCKET_SERVER_URL}/users/${queryUsername}`)
       .then(res => res.json())
       .then(resJson => {
         console.log(resJson)
