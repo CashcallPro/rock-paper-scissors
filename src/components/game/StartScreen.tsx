@@ -31,7 +31,7 @@ export function StartScreen({
 
   useEffect(() => {
 
-    fetch(`http://localhost:3001/users/${queryUsername}`)
+    fetch(`${process.env.API_URL}/users/${queryUsername}`)
       .then(res => res.json())
       .then(resJson => {
         console.log(resJson)
