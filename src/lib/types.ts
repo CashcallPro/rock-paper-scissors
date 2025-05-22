@@ -30,3 +30,35 @@ export interface OpponentMadeChoiceData {
     message: string;
     timerDetails?: { activeFor: string; duration: number }
 }
+
+/**
+ * Represents a single score entry for a player in a match.
+ */
+export interface ScoreEntry {
+  readonly username: string; // The username of the player this score belongs to
+  score: number;          // The score achieved by the player
+}
+
+/**
+ * Represents a single match played.
+ */
+export interface Match {
+  readonly sessionId: string;   // Unique identifier for the match session
+  readonly players: string[];   // Array of usernames of players who participated
+  scores: ScoreEntry[];        // Array of score entries for the match
+  readonly createdAt: string;   // ISO date string of when the match was created/recorded
+  updatedAt: string;           // ISO date string of when the match was last updated
+}
+
+/**
+ * Represents the main user profile structure.
+ */
+export interface UserProfile {
+  readonly _id: string;        // Unique identifier for the user (e.g., MongoDB ObjectId)
+  username: string;           // The user's username
+  coins: number;              // The number of coins the user has
+  readonly createdAt: string;  // ISO date string of when the user profile was created
+  updatedAt: string;          // ISO date string of when the user profile was last updated
+  readonly __v: number;       // Version key (common in Mongoose schemas)
+  matches: Match[];           // Array of matches the user has participated in
+}

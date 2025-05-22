@@ -1,8 +1,9 @@
 "use client";
 import { InputText } from 'primereact/inputtext';
 import { useSearchParams } from 'next/navigation';
-import { Suspense, useEffect } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Image from 'next/image';
+import { UserProfile } from '@/lib';
 
 interface StartScreenProps {
   username: string;
@@ -26,6 +27,19 @@ export function StartScreen({
   const queryParams = useSearchParams();
   const queryUsername = queryParams.get('username');
 
+  const [user, setUser] = useState<UserProfile>()
+
+  useEffect(() => {
+
+    fetch(`http://localhost:3001/users/${queryUsername}`)
+      .then(res => res.json())
+      .then(resJson => {
+        console.log(resJson)
+        setUser(resJson)
+      })
+
+  }, [queryUsername])
+
   useEffect(() => {
     if (queryUsername) {
       setUsername(queryUsername); // Pre-fill if from query
@@ -41,6 +55,10 @@ export function StartScreen({
         <div className="p-fluid mb-4 w-full max-w-xs">
           <span className="p-float-label flex-col">
             <h1 style={{ color: 'white' }}>Welcome to Battle</h1>
+            {
+              user &&
+              <h1 style={{ color: 'white' }}>Your Total Coins: ${user.coins}</h1>
+            }
             <InputText
               id="username"
               value={username}
