@@ -296,6 +296,7 @@ export function useGameLogic() {
 
   const handleStartGame = useCallback(() => {
     const nameFromQuery = queryParams.get('username');
+    const telegramUserId = queryParams.get('userId')
     const finalUsername = nameFromQuery || username.trim();
 
     if (!finalUsername) {
@@ -303,7 +304,7 @@ export function useGameLogic() {
       return;
     }
     if (socket && isConnected) {
-      socket.emit('start', { username: finalUsername });
+      socket.emit('start', { username: finalUsername, userId: telegramUserId });
       if (!nameFromQuery) setUsername(finalUsername);
       setUserActionMessage('');
       setGamePhase('searching');
