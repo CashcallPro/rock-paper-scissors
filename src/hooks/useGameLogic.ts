@@ -5,6 +5,18 @@ import { Choice, ServerResult, GamePhase, choiceEmojis, MatchFoundData, RoundRes
 import { useSocketConnection } from './useSocketConnection';
 import { useTurnTimer } from './useTurnTimer';
 
+// Interface for the new socket event
+interface MatchmakingFailedInsufficientCoinsData {
+  message: string;
+  required: number;
+  currentBalance: number;
+}
+
+// Interface for the matchmaking_failed_system_error event
+interface MatchmakingFailedSystemErrorData {
+  message: string;
+}
+
 export function useGameLogic() {
   const queryParams = useSearchParams();
   const { socket, isConnected, connectionMessage: socketConnectionMessage, connectSocket } = useSocketConnection(SOCKET_SERVER_URL);
@@ -237,6 +249,16 @@ export function useGameLogic() {
       stopMyTurnTimer();
     };
 
+    const handleMatchmakingFailedInsufficientCoins = (data: MatchmakingFailedInsufficientCoinsData) => {
+      console.log('Matchmaking failed due to insufficient coins:', data);
+      resetGameToStart(data.message);
+    };
+
+    const handleMatchmakingFailedSystemError = (data: MatchmakingFailedSystemErrorData) => {
+      console.log('Matchmaking failed due to system error:', data);
+      resetGameToStart(data.message);
+    };
+
     socket.on('match_found', handleMatchFound);
     socket.on('waiting_for_opponent', handleWaiting);
     socket.on('already_in_queue', handleAlreadyInQueue);
@@ -250,6 +272,8 @@ export function useGameLogic() {
     socket.on('opponent_disconnected', handleOpponentDisconnected);
     socket.on('game_ended', handleGameEndedByServer);
     socket.on('error_occurred', handleErrorOccurred);
+    socket.on('matchmaking_failed_insufficient_coins', handleMatchmakingFailedInsufficientCoins);
+    socket.on('matchmaking_failed_system_error', handleMatchmakingFailedSystemError); // Added listener
 
     return () => {
       socket.off('match_found', handleMatchFound);
@@ -265,6 +289,8 @@ export function useGameLogic() {
       socket.off('opponent_disconnected', handleOpponentDisconnected);
       socket.off('game_ended', handleGameEndedByServer);
       socket.off('error_occurred', handleErrorOccurred);
+      socket.off('matchmaking_failed_insufficient_coins', handleMatchmakingFailedInsufficientCoins);
+      socket.off('matchmaking_failed_system_error', handleMatchmakingFailedSystemError); // Added cleanup
     };
   }, [socket, hasMadeChoiceThisRound, longestStreak, gamePhase, resetMyTurnTimer, startMyTurnTimer, stopMyTurnTimer, resetGameToStart]);
 
