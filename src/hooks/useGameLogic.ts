@@ -382,8 +382,19 @@ export function useGameLogic() {
         console.error('Error submitting score:', err);
       }
     }
-    resetGameToStart("You ended the game. Play again?");
-  }, [socket, sessionId, isConnected, queryParams, yourScore, longestStreak, resetGameToStart, API_URL_BOT_SCORE]);
+    // Instead of resetting, transition to gameEnded phase
+    setGamePhase('gameEnded');
+    setGameEndReason("You ended the game. Play again?");
+    setFinalScores({ playerScore: yourScore, opponentScore: opponentScore });
+    stopMyTurnTimer();
+    resetMyTurnTimer();
+    // resetGameToStart("You ended the game. Play again?"); // Original line - removed
+  }, [
+    socket, sessionId, isConnected, queryParams, yourScore, longestStreak, opponentScore, // Added opponentScore
+    API_URL_BOT_SCORE, setGamePhase, setGameEndReason, setFinalScores,      // Added state setters
+    stopMyTurnTimer, resetMyTurnTimer                                       // Added timer controls
+    // resetGameToStart was removed from dependencies as it's no longer called directly
+  ]);
 
 
   return {
