@@ -89,6 +89,7 @@ export function StartScreen({
             priority // If it's an LCP element
           />
         </button>
+        <p className='text-white'>10$ per round</p>
         {(connectionMessage || userActionMessage) && (
           <p className="mt-4 text-sm text-red-500">
             {userActionMessage || connectionMessage || (!isConnected && "Connecting...")}

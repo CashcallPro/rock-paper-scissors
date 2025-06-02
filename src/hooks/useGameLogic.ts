@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Choice, ServerResult, GamePhase, choiceEmojis, MatchFoundData, RoundResultData, OpponentMadeChoiceData, API_URL_BOT_SCORE, SOCKET_SERVER_URL, SessionData, Player } from '../lib'; // Added SessionData, Player
+import { Choice, ServerResult, GamePhase, choiceEmojis, MatchFoundData, RoundResultData, OpponentMadeChoiceData, API_URL_BOT_SCORE, SOCKET_SERVER_URL, SessionData } from '../lib';
 import { useSocketConnection } from './useSocketConnection';
 import { useTurnTimer } from './useTurnTimer';
 
@@ -486,7 +486,7 @@ export function useGameLogic() {
     // resetGameToStart("You ended the game. Play again?"); // Original line - removed
   }, [
     socket, sessionId, isConnected, queryParams, yourScore, longestStreak, opponentScore, // Added opponentScore
-    API_URL_BOT_SCORE, setGamePhase, setGameEndReason, setFinalScores,      // Added state setters
+    setGamePhase, setGameEndReason, setFinalScores,      // Added state setters
     stopMyTurnTimer, resetMyTurnTimer                                       // Added timer controls
     // resetGameToStart was removed from dependencies as it's no longer called directly
   ]);
