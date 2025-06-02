@@ -10,7 +10,7 @@ export type Choice = 'rock' | 'paper' | 'scissors';
 
 export type ServerResult = 'You won!' | 'You lost!' | "It's a tie!" | '';
 
-export type GamePhase = 'start' | 'searching' | 'opponentFound' | 'joining' | 'playing';
+export type GamePhase = 'start' | 'searching' | 'opponentFound' | 'joining' | 'playing' | 'gameEnded';
 
 export interface MatchFoundData {
   sessionId: string;

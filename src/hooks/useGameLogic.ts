@@ -39,6 +39,10 @@ export function useGameLogic() {
   const [roundStatusMessage, setRoundStatusMessage] = useState<string>('');
   const [hasMadeChoiceThisRound, setHasMadeChoiceThisRound] = useState<boolean>(false);
 
+  // New state for game ended phase
+  const [gameEndReason, setGameEndReason] = useState<string>('');
+  const [finalScores, setFinalScores] = useState<{ playerScore: number; opponentScore: number | undefined }>({ playerScore: 0, opponentScore: undefined });
+
 
   // Centralized game reset logic
   const resetGameToStart = useCallback((message?: string) => {
@@ -68,6 +72,9 @@ export function useGameLogic() {
     setHasMadeChoiceThisRound(false);
     setRoundStatusMessage('');
     setJoiningCountdown(2);
+    // Reset new game ended state
+    setGameEndReason('');
+    setFinalScores({ playerScore: 0, opponentScore: undefined });
     stopMyTurnTimer();
     resetMyTurnTimer();
   }, [
@@ -78,6 +85,8 @@ export function useGameLogic() {
     setMyChoiceEmoji, setOpponentChoiceEmoji, setRoundResult, setRoundReason,
     setYourScore, setOpponentScore, setWinStreak, setHasMadeChoiceThisRound,
     setUserActionMessage, setRoundStatusMessage, setJoiningCountdown,
+    // Added setters for new state
+    setGameEndReason, setFinalScores,
     stopMyTurnTimer, resetMyTurnTimer
   ]);
 
@@ -203,13 +212,23 @@ export function useGameLogic() {
 
     const handleOpponentDisconnected = (data: { message: string }) => {
       console.log('Opponent disconnected:', data);
-      resetGameToStart(data.message || "Opponent disconnected. The game has ended.");
+      setGamePhase('gameEnded');
+      setGameEndReason(data.message || "Opponent disconnected. The game has ended.");
+      setFinalScores({ playerScore: yourScore, opponentScore: opponentScore });
+      stopMyTurnTimer();
+      resetMyTurnTimer();
+      // No call to resetGameToStart here, stays in gameEnded phase
     };
 
     const handleGameEndedByServer = (data: { message: string; initiator?: string }) => {
       console.log('Game ended by server/opponent:', data);
       const endMessage = data.initiator ? `${data.initiator} ended the game.` : (data.message || "The game has ended.");
-      resetGameToStart(endMessage);
+      setGamePhase('gameEnded');
+      setGameEndReason(endMessage);
+      setFinalScores({ playerScore: yourScore, opponentScore: opponentScore });
+      stopMyTurnTimer();
+      resetMyTurnTimer();
+      // No call to resetGameToStart here, stays in gameEnded phase
     };
 
     const handleErrorOccurred = (data: { message: string }) => {
@@ -376,6 +395,9 @@ export function useGameLogic() {
     hasMadeChoiceThisRound, isConnected, sessionId,
     isMyTurnTimerActive, turnTimerDuration, turnTimeRemaining, turnTimerProgress,
     joiningCountdown,
+    // New state for game ended phase
+    gameEndReason,
+    finalScores,
     // Actions
     setUsername,
     handlePlayerChoice,
