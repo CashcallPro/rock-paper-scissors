@@ -10,7 +10,7 @@ export type Choice = 'rock' | 'paper' | 'scissors';
 
 export type ServerResult = 'You won!' | 'You lost!' | "It's a tie!" | '';
 
-export type GamePhase = 'start' | 'searching' | 'opponentFound' | 'joining' | 'playing';
+export type GamePhase = 'start' | 'searching' | 'opponentFound' | 'joining' | 'playing' | 'gameEnded';
 
 export interface MatchFoundData {
   sessionId: string;
@@ -61,4 +61,23 @@ export interface UserProfile {
   updatedAt: string;          // ISO date string of when the user profile was last updated
   readonly __v: number;       // Version key (common in Mongoose schemas)
   matches: Match[];           // Array of matches the user has participated in
+}
+
+// Added based on game_ended_insufficient_funds event requirements
+export interface Player {
+  socketId: string;
+  username: string;
+}
+
+export interface Score {
+  [playerId: string]: number;
+}
+
+export interface SessionData {
+  players: Player[];
+  startTime: number;
+  choices: { [socketId: string]: Choice | null };
+  lastActivity: number;
+  scores: Score;
+  isBotGame?: boolean;
 }

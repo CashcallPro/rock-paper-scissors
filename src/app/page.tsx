@@ -7,6 +7,7 @@ import { SearchingScreen } from '../components/game/SearchingScreen';
 import { OpponentFoundScreen } from '../components/game/OpponentFoundScreen';
 import { JoiningScreen } from '../components/game/JoiningScreen';
 import { PlayingScreen } from '../components/game/PlayingScreen';
+import { GameEndedScreen } from '../components/game/GameEndedScreen'; // Import GameEndedScreen
 import Image from 'next/image';
 import { Suspense } from 'react';
 
@@ -29,7 +30,11 @@ function GamePageContent() {
     hasMadeChoiceThisRound, isConnected, sessionId,
     isMyTurnTimerActive, turnTimerDuration, turnTimeRemaining, turnTimerProgress,
     joiningCountdown,
-    setUsername, handlePlayerChoice, handleStartGame, handleEndGame,
+    // New state for game ended phase from useGameLogic
+    gameEndReason,
+    finalScores,
+    canPlayAgain, // Destructure canPlayAgain
+    setUsername, handlePlayerChoice, handleStartGame, handleEndGame, resetGameToStart, // Added resetGameToStart
   } = useGameLogic();
 
 
@@ -79,6 +84,16 @@ function GamePageContent() {
             isConnected={isConnected}
             sessionId={sessionId}
             onPlayerChoice={handlePlayerChoice}
+          />
+        );
+      case 'gameEnded': // Add case for gameEnded
+        return (
+          <GameEndedScreen
+            reason={gameEndReason}
+            playerScore={finalScores.playerScore}
+            opponentScore={finalScores.opponentScore}
+            onPlayAgain={() => resetGameToStart("Welcome back! Let's play again.")}
+            canPlayAgain={canPlayAgain} // Pass canPlayAgain
           />
         );
       default:
