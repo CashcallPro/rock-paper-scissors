@@ -33,6 +33,7 @@ function GamePageContent() {
     // New state for game ended phase from useGameLogic
     gameEndReason,
     finalScores,
+    canPlayAgain, // Destructure canPlayAgain
     setUsername, handlePlayerChoice, handleStartGame, handleEndGame, resetGameToStart, // Added resetGameToStart
   } = useGameLogic();
 
@@ -91,7 +92,8 @@ function GamePageContent() {
             reason={gameEndReason}
             playerScore={finalScores.playerScore}
             opponentScore={finalScores.opponentScore}
-            onPlayAgain={() => resetGameToStart("Welcome back! Let's play again.")} // Pass resetGameToStart
+            onPlayAgain={() => resetGameToStart("Welcome back! Let's play again.")}
+            canPlayAgain={canPlayAgain} // Pass canPlayAgain
           />
         );
       default:

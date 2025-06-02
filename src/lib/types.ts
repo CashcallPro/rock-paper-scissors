@@ -62,3 +62,22 @@ export interface UserProfile {
   readonly __v: number;       // Version key (common in Mongoose schemas)
   matches: Match[];           // Array of matches the user has participated in
 }
+
+// Added based on game_ended_insufficient_funds event requirements
+export interface Player {
+  socketId: string;
+  username: string;
+}
+
+export interface Score {
+  [playerId: string]: number;
+}
+
+export interface SessionData {
+  players: Player[];
+  startTime: number;
+  choices: { [socketId: string]: Choice | null };
+  lastActivity: number;
+  scores: Score;
+  isBotGame?: boolean;
+}

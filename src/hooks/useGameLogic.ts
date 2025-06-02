@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Choice, ServerResult, GamePhase, choiceEmojis, MatchFoundData, RoundResultData, OpponentMadeChoiceData, API_URL_BOT_SCORE, SOCKET_SERVER_URL } from '../lib';
+import { Choice, ServerResult, GamePhase, choiceEmojis, MatchFoundData, RoundResultData, OpponentMadeChoiceData, API_URL_BOT_SCORE, SOCKET_SERVER_URL, SessionData, Player } from '../lib'; // Added SessionData, Player
 import { useSocketConnection } from './useSocketConnection';
 import { useTurnTimer } from './useTurnTimer';
 
@@ -15,6 +15,23 @@ interface MatchmakingFailedInsufficientCoinsData {
 // Interface for the matchmaking_failed_system_error event
 interface MatchmakingFailedSystemErrorData {
   message: string;
+}
+
+// Interface for the opponent_forfeit_coins event
+interface OpponentForfeitCoinsData {
+  message: string;
+}
+
+// Interface for the forfeit_coins event
+interface ForfeitCoinsData {
+  message: string;
+}
+
+// Interface for the game_ended_insufficient_funds event
+interface GameEndedInsufficientFundsData {
+  message: string;
+  canContinue: boolean;
+  session: SessionData;
 }
 
 export function useGameLogic() {
@@ -54,6 +71,7 @@ export function useGameLogic() {
   // New state for game ended phase
   const [gameEndReason, setGameEndReason] = useState<string>('');
   const [finalScores, setFinalScores] = useState<{ playerScore: number; opponentScore: number | undefined }>({ playerScore: 0, opponentScore: undefined });
+  const [canPlayAgain, setCanPlayAgain] = useState<boolean>(true); // New state for canPlayAgain
 
 
   // Centralized game reset logic
@@ -87,6 +105,7 @@ export function useGameLogic() {
     // Reset new game ended state
     setGameEndReason('');
     setFinalScores({ playerScore: 0, opponentScore: undefined });
+    setCanPlayAgain(true); // Reset canPlayAgain
     stopMyTurnTimer();
     resetMyTurnTimer();
   }, [
@@ -98,7 +117,7 @@ export function useGameLogic() {
     setYourScore, setOpponentScore, setWinStreak, setHasMadeChoiceThisRound,
     setUserActionMessage, setRoundStatusMessage, setJoiningCountdown,
     // Added setters for new state
-    setGameEndReason, setFinalScores,
+    setGameEndReason, setFinalScores, setCanPlayAgain, // Added setCanPlayAgain
     stopMyTurnTimer, resetMyTurnTimer
   ]);
 
@@ -259,6 +278,50 @@ export function useGameLogic() {
       resetGameToStart(data.message);
     };
 
+    const handleOpponentForfeitCoins = (data: OpponentForfeitCoinsData) => {
+      console.log('Opponent forfeit coins:', data);
+      setRoundStatusMessage(data.message);
+      // Do not change gamePhase or reset game here
+    };
+
+    const handleForfeitCoins = (data: ForfeitCoinsData) => {
+      console.log('Player forfeit coins:', data);
+      setRoundStatusMessage(data.message);
+      // Do not change gamePhase or reset game here
+    };
+
+    const handleGameEndedInsufficientFunds = (data: GameEndedInsufficientFundsData) => {
+      console.log('Game ended due to insufficient funds:', data);
+      setGamePhase('gameEnded');
+      setGameEndReason(data.message);
+
+      const myPlayerId = socket?.id;
+      let myFinalScore = 0;
+      let opponentFinalScore: number | undefined = undefined;
+
+      if (myPlayerId && data.session.scores) {
+        myFinalScore = data.session.scores[myPlayerId] ?? 0;
+        const opponentPlayer = data.session.players.find(p => p.socketId !== myPlayerId);
+        if (opponentPlayer && data.session.scores[opponentPlayer.socketId] !== undefined) {
+          opponentFinalScore = data.session.scores[opponentPlayer.socketId];
+        } else if (opponentPlayer) {
+          // If opponent score is not in session.scores, try to get it from the general opponentScore state
+          // This case might be unlikely if session.scores is comprehensive
+          opponentFinalScore = opponentScore;
+        }
+      } else {
+        // Fallback if socket.id is not available or scores are not in session
+        // This uses the hook's current scores as a less precise fallback
+        myFinalScore = yourScore;
+        opponentFinalScore = opponentScore;
+      }
+      
+      setFinalScores({ playerScore: myFinalScore, opponentScore: opponentFinalScore });
+      setCanPlayAgain(data.canContinue); // Set canPlayAgain from event data
+      stopMyTurnTimer();
+      resetMyTurnTimer();
+    };
+
     socket.on('match_found', handleMatchFound);
     socket.on('waiting_for_opponent', handleWaiting);
     socket.on('already_in_queue', handleAlreadyInQueue);
@@ -273,7 +336,10 @@ export function useGameLogic() {
     socket.on('game_ended', handleGameEndedByServer);
     socket.on('error_occurred', handleErrorOccurred);
     socket.on('matchmaking_failed_insufficient_coins', handleMatchmakingFailedInsufficientCoins);
-    socket.on('matchmaking_failed_system_error', handleMatchmakingFailedSystemError); // Added listener
+    socket.on('matchmaking_failed_system_error', handleMatchmakingFailedSystemError);
+    socket.on('opponent_forfeit_coins', handleOpponentForfeitCoins);
+    socket.on('forfeit_coins', handleForfeitCoins);
+    socket.on('game_ended_insufficient_funds', handleGameEndedInsufficientFunds); // Added listener
 
     return () => {
       socket.off('match_found', handleMatchFound);
@@ -290,9 +356,12 @@ export function useGameLogic() {
       socket.off('game_ended', handleGameEndedByServer);
       socket.off('error_occurred', handleErrorOccurred);
       socket.off('matchmaking_failed_insufficient_coins', handleMatchmakingFailedInsufficientCoins);
-      socket.off('matchmaking_failed_system_error', handleMatchmakingFailedSystemError); // Added cleanup
+      socket.off('matchmaking_failed_system_error', handleMatchmakingFailedSystemError);
+      socket.off('opponent_forfeit_coins', handleOpponentForfeitCoins);
+      socket.off('forfeit_coins', handleForfeitCoins);
+      socket.off('game_ended_insufficient_funds', handleGameEndedInsufficientFunds); // Added cleanup
     };
-  }, [socket, hasMadeChoiceThisRound, longestStreak, gamePhase, resetMyTurnTimer, startMyTurnTimer, stopMyTurnTimer, resetGameToStart]);
+  }, [socket, hasMadeChoiceThisRound, longestStreak, gamePhase, resetMyTurnTimer, startMyTurnTimer, stopMyTurnTimer, resetGameToStart, yourScore, opponentScore]); // Added yourScore and opponentScore to dependencies for fallback logic
 
   // Game Phase Transitions (no changes here)
   useEffect(() => {
@@ -435,6 +504,7 @@ export function useGameLogic() {
     // New state for game ended phase
     gameEndReason,
     finalScores,
+    canPlayAgain, // Return canPlayAgain
     // Actions
     setUsername,
     handlePlayerChoice,

@@ -5,6 +5,7 @@ interface GameEndedScreenProps {
   playerScore: number;
   opponentScore: number | undefined;
   onPlayAgain: () => void;
+  canPlayAgain: boolean; // Added canPlayAgain prop
 }
 
 export const GameEndedScreen: React.FC<GameEndedScreenProps> = ({
@@ -12,6 +13,7 @@ export const GameEndedScreen: React.FC<GameEndedScreenProps> = ({
   playerScore,
   opponentScore,
   onPlayAgain,
+  canPlayAgain, // Destructure canPlayAgain
 }) => {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-800 text-white p-4">
@@ -37,7 +39,8 @@ export const GameEndedScreen: React.FC<GameEndedScreenProps> = ({
 
         <button
           onClick={onPlayAgain}
-          className="mt-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xl transition duration-150 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+          disabled={!canPlayAgain} // Use canPlayAgain to disable button
+          className="mt-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xl transition duration-150 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 disabled:opacity-50 disabled:cursor-not-allowed" // Added disabled styles
         >
           Play Again
         </button>
