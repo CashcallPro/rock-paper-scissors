@@ -1,4 +1,4 @@
-var crypto = require('crypto');
+import crypto from 'crypto'
 
 const algorithm = 'aes-256-cbc';
 
@@ -9,9 +9,15 @@ function base64UrlDecode(str: string): Buffer {
 }
 
 export function decryptFromUrl(encryptedUrlSafe: string): string {
+
+  const hashKey = process.env.NEXT_PUBLIC_KEY
+
+  if (!hashKey)
+    throw new Error('NEXT_PUBLIC_KEY is required')
+
   const secretKey = crypto
     .createHash('sha256')
-    .update(process.env.NEXT_PUBLIC_KEY) // Use your actual secret here
+    .update(hashKey) // Use your actual secret here
     .digest();
   const iv = Buffer.alloc(16, 0);
 
