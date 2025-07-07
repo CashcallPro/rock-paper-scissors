@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import { Choice, ServerResult, GamePhase, choiceEmojis, MatchFoundData, RoundResultData, OpponentMadeChoiceData, API_URL_BOT_SCORE, SOCKET_SERVER_URL, SessionData } from '../lib';
 import { useSocketConnection } from './useSocketConnection';
 import { useTurnTimer } from './useTurnTimer';
+import { decryptFromUrl, getQueryParam } from '@/lib/decrypt';
 
 // Interface for the new socket event
 interface MatchmakingFailedInsufficientCoinsData {
@@ -35,11 +36,11 @@ interface GameEndedInsufficientFundsData {
 }
 
 export function useGameLogic() {
-  const queryParams = useSearchParams();
+
   const { socket, isConnected, connectionMessage: socketConnectionMessage, connectSocket } = useSocketConnection(SOCKET_SERVER_URL);
   const {
-     isMyTurnTimerActive, turnTimerDuration, turnTimeRemaining, turnTimerProgress,
-     startMyTurnTimer, stopMyTurnTimer, resetMyTurnTimer
+    isMyTurnTimerActive, turnTimerDuration, turnTimeRemaining, turnTimerProgress,
+    startMyTurnTimer, stopMyTurnTimer, resetMyTurnTimer
   } = useTurnTimer();
 
   // Player & Opponent visual state
@@ -193,9 +194,9 @@ export function useGameLogic() {
     };
 
     const handleCannotCancelInGame = (data: { message: string }) => {
-        console.warn('Attempted to cancel matchmaking while in game:', data.message);
-        setUserActionMessage(data.message); // Inform user
-        // No phase change needed, user is still in game.
+      console.warn('Attempted to cancel matchmaking while in game:', data.message);
+      setUserActionMessage(data.message); // Inform user
+      // No phase change needed, user is still in game.
     };
 
     const handleChoiceRegistered = (data: { message: string }) => {
@@ -204,16 +205,16 @@ export function useGameLogic() {
     };
 
     const handleOpponentMadeChoice = (data: OpponentMadeChoiceData) => {
-     console.log('Opponent made choice:', data);
-     setRoundStatusMessage(data.message);
+      console.log('Opponent made choice:', data);
+      setRoundStatusMessage(data.message);
 
-     if (data.timerDetails && data.timerDetails.activeFor === socket.id && !hasMadeChoiceThisRound) {
-       startMyTurnTimer(data.timerDetails.duration);
-     } else if (hasMadeChoiceThisRound) {
-       setRoundStatusMessage('Opponent has chosen. Revealing results...');
-       stopMyTurnTimer();
-     }
-   };
+      if (data.timerDetails && data.timerDetails.activeFor === socket.id && !hasMadeChoiceThisRound) {
+        startMyTurnTimer(data.timerDetails.duration);
+      } else if (hasMadeChoiceThisRound) {
+        setRoundStatusMessage('Opponent has chosen. Revealing results...');
+        stopMyTurnTimer();
+      }
+    };
 
     const handleRoundResult = (data: RoundResultData) => {
       console.log('Round Result:', data);
@@ -315,7 +316,7 @@ export function useGameLogic() {
         myFinalScore = yourScore;
         opponentFinalScore = opponentScore;
       }
-      
+
       setFinalScores({ playerScore: myFinalScore, opponentScore: opponentFinalScore });
       setCanPlayAgain(data.canContinue); // Set canPlayAgain from event data
       stopMyTurnTimer();
@@ -409,8 +410,12 @@ export function useGameLogic() {
   }, [socket, sessionId, hasMadeChoiceThisRound, isConnected, stopMyTurnTimer]);
 
   const handleStartGame = useCallback(() => {
-    const nameFromQuery = queryParams.get('username');
-    const telegramUserId = queryParams.get('userId')
+
+    const query = window.location.search
+    const decryptedQuery = decryptFromUrl(query)
+    const nameFromQuery = getQueryParam(decryptedQuery, 'username')
+    const telegramUserId = getQueryParam(decryptedQuery, 'userId')
+    const groupOwner = getQueryParam(decryptedQuery, 'owner')
     const finalUsername = nameFromQuery || username.trim();
 
     if (!finalUsername) {
@@ -418,7 +423,7 @@ export function useGameLogic() {
       return;
     }
     if (socket && isConnected) {
-      socket.emit('start', { username: finalUsername, userId: telegramUserId });
+      socket.emit('start', { username: finalUsername, userId: telegramUserId, groupOwner });
       if (!nameFromQuery) setUsername(finalUsername);
       setUserActionMessage('');
       setGamePhase('searching');
@@ -427,7 +432,7 @@ export function useGameLogic() {
       setUserActionMessage("Cannot connect to server. Please wait or check server status.");
       if (socket && !isConnected) connectSocket();
     }
-  }, [socket, isConnected, username, queryParams, connectSocket]);
+  }, [socket, isConnected, username, connectSocket]);
 
   // Explicit function to cancel search, if needed for a specific button
   // This essentially does what resetGameToStart would do if called from 'searching'
@@ -441,9 +446,9 @@ export function useGameLogic() {
       // setUserActionMessage('Matchmaking cancelled.');
       // setRoundStatusMessage('');
     } else if (gamePhase !== 'searching') {
-        setUserActionMessage("You are not currently searching for a game.");
+      setUserActionMessage("You are not currently searching for a game.");
     } else {
-        setUserActionMessage("Not connected to server.");
+      setUserActionMessage("Not connected to server.");
     }
     // For now, let's rely on resetGameToStart or the server response
     // to fully transition. If you call resetGameToStart from a "cancel search" button,
@@ -457,8 +462,10 @@ export function useGameLogic() {
       console.log('Sent "end_game" event to server for session:', sessionId);
     }
 
-    const userId = queryParams.get('userId');
-    const inlineMessageId = queryParams.get('inlineMessageId');
+    const query = window.location.search
+    const decryptedQuery = decryptFromUrl(query)
+    const userId = getQueryParam(decryptedQuery, 'userId')
+    const inlineMessageId = getQueryParam(decryptedQuery, 'inlineMessageId')
 
     if (userId && (yourScore > 0 || longestStreak > 0)) {
       const scoreData = {
@@ -485,7 +492,7 @@ export function useGameLogic() {
     resetMyTurnTimer();
     // resetGameToStart("You ended the game. Play again?"); // Original line - removed
   }, [
-    socket, sessionId, isConnected, queryParams, yourScore, longestStreak, opponentScore, // Added opponentScore
+    socket, sessionId, isConnected, yourScore, longestStreak, opponentScore, // Added opponentScore
     setGamePhase, setGameEndReason, setFinalScores,      // Added state setters
     stopMyTurnTimer, resetMyTurnTimer                                       // Added timer controls
     // resetGameToStart was removed from dependencies as it's no longer called directly

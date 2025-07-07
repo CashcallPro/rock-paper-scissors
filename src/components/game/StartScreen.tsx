@@ -1,9 +1,9 @@
 "use client";
 import { InputText } from 'primereact/inputtext';
-import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { SOCKET_SERVER_URL, UserProfile } from '@/lib';
+import { decryptFromUrl, getQueryParam } from '@/lib/decrypt';
 
 interface StartScreenProps {
   username: string;
@@ -24,27 +24,29 @@ export function StartScreen({
   longestStreak,
   isConnected,
 }: StartScreenProps) {
-  const queryParams = useSearchParams();
-  const queryUsername = queryParams.get('username');
 
+  const [queryUsername, setQueryusername] = useState<string>()
   const [user, setUser] = useState<UserProfile>()
 
   useEffect(() => {
 
-    fetch(`${SOCKET_SERVER_URL}/users/${queryUsername}`)
-      .then(res => res.json())
-      .then(resJson => {
-        console.log(resJson)
-        setUser(resJson)
-      })
+    const query = window.location.search
+    const decryptedQuery = decryptFromUrl(query)
+    const queryUsername = getQueryParam(decryptedQuery, 'username')
 
-  }, [queryUsername])
-
-  useEffect(() => {
     if (queryUsername) {
-      setUsername(queryUsername); // Pre-fill if from query
+      setUsername(queryUsername)
+      setQueryusername(queryUsername)
+
+      fetch(`${SOCKET_SERVER_URL}/users/${queryUsername}`)
+        .then(res => res.json())
+        .then(resJson => {
+          console.log(resJson)
+          setUser(resJson)
+        })
     }
-  }, [queryUsername, setUsername]);
+
+  }, [])
 
   return (
     <Suspense>
