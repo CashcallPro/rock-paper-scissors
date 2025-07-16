@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Script from "next/script";
 
 import { Lilita_One } from 'next/font/google'
+import AnalyticsProvider from "@/components/AnalyticsProvider";
 
 const lilita = Lilita_One({
   subsets: ['latin'],
@@ -20,10 +22,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${lilita.className} antialiased`}
-      >
-        {children}
+      <body className={`${lilita.className} antialiased`}>
+        <AnalyticsProvider>
+          {children}
+        </AnalyticsProvider>
+        <Script
+          src="https://telegram.org/js/telegram-web-app.js"
+          strategy="beforeInteractive" />
       </body>
     </html>
   );

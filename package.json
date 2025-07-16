@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@telegram-apps/analytics": "^1.4.3",
     "next": "15.2.4",
     "primereact": "^10.9.3",
     "react": "^19.0.0",

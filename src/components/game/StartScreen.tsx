@@ -41,7 +41,6 @@ export function StartScreen({
       fetch(`${SOCKET_SERVER_URL}/users/${queryUsername}`)
         .then(res => res.json())
         .then(resJson => {
-          console.log(resJson)
           setUser(resJson)
         })
     }
