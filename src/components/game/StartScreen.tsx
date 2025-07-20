@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { SOCKET_SERVER_URL, UserProfile } from '@/lib';
 import { decryptFromUrl, getQueryParam } from '@/lib/decrypt';
 import { retrieveLaunchParams } from '@telegram-apps/sdk';
+import { useLaunchParams, useRawInitData, useRawLaunchParams } from '@telegram-apps/sdk-react';
 
 interface StartScreenProps {
   username: string;
@@ -28,6 +29,8 @@ export function StartScreen({
 
   const [queryUsername, setQueryusername] = useState<string>()
   const [user, setUser] = useState<UserProfile>()
+  const rawLaunchParams = useLaunchParams()
+  const rawInitData = useRawInitData()
 
   useEffect(() => {
 
@@ -38,18 +41,37 @@ export function StartScreen({
 
     const query = window.location.search
 
-    console.log({ query })
+    console.log({ query: rawLaunchParams })
+    console.log({ rawInitData: rawInitData })
 
     const hash = window.location.hash.slice(1);
     console.log(hash); // tgWebAppData=...&tgWebAppVersion=6.2&...
 
     const params = new URLSearchParams(hash);
     console.log({ version: params.get('tgWebAppVersion') });
-    console.log({ params: params.get('tgWebAppData') });
+
+    const tgWebAppData = params.get('tgWebAppData');
+
+    // 4. Parse the inner tgWebAppData string
+    const webAppParams = new URLSearchParams(tgWebAppData!);
+
+    // 5. Get the 'user' data, which is a JSON string
+    const userJsonString = webAppParams.get('user');
+    const chatJsonString = webAppParams.get('chat');
+
+    // 6. Parse the JSON string into a JavaScript object
+    const userObject = JSON.parse(userJsonString!);
+
+    // 7. Finally, get the user ID
+    const userId = 212307244//userObject.id;
+
+    console.log(userObject);
+    console.log({ chatJsonString: webAppParams });
+    console.log(userId);
 
 
     // const decryptedQuery = decryptFromUrl(query)
-    const queryUsername = 'chief10x'//getQueryParam(decryptedQuery, 'username')
+    const queryUsername = 'chief10x'//userObject.username//getQueryParam(decryptedQuery, 'username')
 
     if (queryUsername) {
       setUsername(queryUsername)

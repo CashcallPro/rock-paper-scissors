@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Script from "next/script";
-
+import {  } from "@telegram-apps/sdk-react";
 import { Lilita_One } from 'next/font/google'
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 
