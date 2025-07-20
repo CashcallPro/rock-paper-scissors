@@ -411,10 +411,10 @@ export function useGameLogic() {
   const handleStartGame = useCallback(() => {
 
     const query = window.location.search
-    const decryptedQuery = decryptFromUrl(query)
-    const nameFromQuery = getQueryParam(decryptedQuery, 'username')
-    const telegramUserId = getQueryParam(decryptedQuery, 'userId')
-    const groupOwner = getQueryParam(decryptedQuery, 'owner')
+    // const decryptedQuery = decryptFromUrl(query)
+    const nameFromQuery = "chief10x" //getQueryParam(decryptedQuery, 'username')
+    const telegramUserId = 212307244 //getQueryParam(decryptedQuery, 'userId')
+    const groupOwner = undefined//getQueryParam(decryptedQuery, 'owner')
     const finalUsername = nameFromQuery || username.trim();
 
     if (!finalUsername) {
@@ -462,9 +462,9 @@ export function useGameLogic() {
     }
 
     const query = window.location.search
-    const decryptedQuery = decryptFromUrl(query)
-    const userId = getQueryParam(decryptedQuery, 'userId')
-    const inlineMessageId = getQueryParam(decryptedQuery, 'inlineMessageId')
+    const decryptedQuery = undefined//decryptFromUrl(query)
+    const userId = 212307244 //getQueryParam(decryptedQuery, 'userId')
+    const inlineMessageId = undefined//getQueryParam(decryptedQuery, 'inlineMessageId')
 
     if (userId && (yourScore > 0 || longestStreak > 0)) {
       const scoreData = {

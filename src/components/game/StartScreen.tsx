@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { SOCKET_SERVER_URL, UserProfile } from '@/lib';
 import { decryptFromUrl, getQueryParam } from '@/lib/decrypt';
+import { retrieveLaunchParams } from '@telegram-apps/sdk';
 
 interface StartScreenProps {
   username: string;
@@ -30,9 +31,25 @@ export function StartScreen({
 
   useEffect(() => {
 
+    const { initDataRaw, initData } = retrieveLaunchParams();
+
+    console.log({ initDataRaw })
+    console.log({ initData })
+
     const query = window.location.search
-    const decryptedQuery = decryptFromUrl(query)
-    const queryUsername = getQueryParam(decryptedQuery, 'username')
+
+    console.log({ query })
+
+    const hash = window.location.hash.slice(1);
+    console.log(hash); // tgWebAppData=...&tgWebAppVersion=6.2&...
+
+    const params = new URLSearchParams(hash);
+    console.log({ version: params.get('tgWebAppVersion') });
+    console.log({ params: params.get('tgWebAppData') });
+
+
+    // const decryptedQuery = decryptFromUrl(query)
+    const queryUsername = 'chief10x'//getQueryParam(decryptedQuery, 'username')
 
     if (queryUsername) {
       setUsername(queryUsername)
