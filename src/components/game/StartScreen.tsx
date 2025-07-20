@@ -27,7 +27,7 @@ export function StartScreen({
 
   const [queryUsername, setQueryusername] = useState<string>()
   const [user, setUser] = useState<UserProfile>()
-  const rawLaunchParams = useLaunchParams()
+  // const rawLaunchParams = useLaunchParams()
   // const rawInitData = useRawInitData()
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export function StartScreen({
     // console.log({ initDataRaw })
     // console.log({ initData })
 
-    console.log({ query: rawLaunchParams })
+    // console.log({ query: rawLaunchParams })
     // console.log({ rawInitData: rawInitData })
 
     // const hash = window.location.hash.slice(1);
