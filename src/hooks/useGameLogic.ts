@@ -410,27 +410,27 @@ export function useGameLogic() {
 
   const handleStartGame = useCallback(() => {
 
-    // const hash = window.location.hash.slice(1);
+    const hash = window.location.hash.slice(1);
     // console.log(hash); // tgWebAppData=...&tgWebAppVersion=6.2&...
 
-    // const params = new URLSearchParams(hash);
+    const params = new URLSearchParams(hash);
     // console.log({ version: params.get('tgWebAppVersion') });
 
-    // const tgWebAppData = params.get('tgWebAppData');
+    const tgWebAppData = params.get('tgWebAppData');
 
     // 4. Parse the inner tgWebAppData string
-    // const webAppParams = new URLSearchParams(tgWebAppData!);
+    const webAppParams = new URLSearchParams(tgWebAppData!);
 
     // 5. Get the 'user' data, which is a JSON string
-    // const userJsonString = webAppParams.get('user');
+    const userJsonString = webAppParams.get('user');
 
     // 6. Parse the JSON string into a JavaScript object
-    // const userObject = JSON.parse(userJsonString!)
+    const userObject = JSON.parse(userJsonString!)
 
     // const query = window.location.search
     // const decryptedQuery = decryptFromUrl(query)
-    const nameFromQuery = "chief10x" //userObject.username////getQueryParam(decryptedQuery, 'username')
-    const telegramUserId = 212307244//userObject.id// //getQueryParam(decryptedQuery, 'userId')
+    const nameFromQuery = userObject.username////getQueryParam(decryptedQuery, 'username')
+    const telegramUserId = userObject.id// //getQueryParam(decryptedQuery, 'userId')
     const groupOwner = undefined//getQueryParam(decryptedQuery, 'owner')
     const finalUsername = nameFromQuery || username.trim();
 
