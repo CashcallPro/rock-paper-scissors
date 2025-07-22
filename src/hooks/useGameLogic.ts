@@ -429,8 +429,8 @@ export function useGameLogic() {
 
     // const query = window.location.search
     // const decryptedQuery = decryptFromUrl(query)
-    const nameFromQuery = 'chief10x'//userObject.username////getQueryParam(decryptedQuery, 'username')
-    const telegramUserId = 212307244//userObject.id// //getQueryParam(decryptedQuery, 'userId')
+    const nameFromQuery = userObject.username////getQueryParam(decryptedQuery, 'username')
+    const telegramUserId = userObject.id// //getQueryParam(decryptedQuery, 'userId')
     const groupOwner = undefined//getQueryParam(decryptedQuery, 'owner')
     const finalUsername = nameFromQuery || username.trim();
 
