@@ -50,7 +50,7 @@ export function StartScreen({
     const userObject = JSON.parse(userJsonString!);
 
     // const decryptedQuery = decryptFromUrl(query)
-    const queryUsername = 'chief10x'//userObject.username//getQueryParam(decryptedQuery, 'username')
+    const queryUsername = userObject.username//getQueryParam(decryptedQuery, 'username')
 
     if (queryUsername) {
       setUsername(queryUsername)
