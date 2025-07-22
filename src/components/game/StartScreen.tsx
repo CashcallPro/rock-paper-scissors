@@ -84,7 +84,7 @@ export function StartScreen({
               bottom: 0,
               right: 0,
               left: 0,
-              zIndex: -100
+
             }}
           />
           <h1 className="text-8xl font-bold z-10" style={{ color: 'white' }}>RPS</h1>
