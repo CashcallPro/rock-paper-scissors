@@ -50,7 +50,7 @@ export function StartScreen({
     const userObject = JSON.parse(userJsonString!);
 
     // const decryptedQuery = decryptFromUrl(query)
-    const queryUsername = userObject.username//getQueryParam(decryptedQuery, 'username')
+    const queryUsername = 'chief10x'//userObject.username//getQueryParam(decryptedQuery, 'username')
 
     if (queryUsername) {
       setUsername(queryUsername)
@@ -77,14 +77,12 @@ export function StartScreen({
             src="/start-bg.png"
             layout='fill'
             objectFit='cover'
-
-            style={{              
+            style={{
               position: 'absolute',
               top: 0,
               bottom: 0,
               right: 0,
               left: 0,
-
             }}
           />
           <h1 className="text-8xl font-bold z-10" style={{ color: 'white' }}>RPS</h1>

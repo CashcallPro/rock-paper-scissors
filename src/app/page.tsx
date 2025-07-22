@@ -112,22 +112,22 @@ function GamePageContent() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       </Head>
 
-      <div className={`w-full flex flex-col items-center ${gamePhase === 'playing' ? 'justify-between' : 'justify-center flex-grow'}`} style={{ height: screenHeight }}>
+      <div className={`w-full flex flex-col items-center ${gamePhase === 'playing' ? 'justify-between' : 'justify-center flex-grow'} z-10`} style={{ height: screenHeight }}>
         {/* Exit Game button can be part of the main layout or conditional */}
         {gamePhase !== 'start' && ( // Show Exit button only when not in start phase
-          <div className='w-full flex justify-start p-4 absolute top-0 left-0'>
+          <div className='w-full flex justify-start p-4 absolute top-0 left-0 z-11'>
             <button
               onClick={handleEndGame}
               disabled={!isConnected} // Apply disabled state to the button wrapper
               className={`focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform duration-150 ease-in-out
-                             ${!isConnected ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95'}`}
+                             ${!isConnected ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95'} z-10`}
             >
               <Image
                 src="/btn-giveup.svg" // Path relative to the public folder
                 alt="Start Game"
                 width={90} // Specify a base width (adjust as needed)
                 height={40} // Specify a base height (adjust as needed)
-                className={`object-contain ${!isConnected ? '' : 'cursor-pointer'}`}
+                className={`object-contain ${!isConnected ? '' : 'cursor-pointer'} z-10`}
                 priority // If it's an LCP element
               />
             </button>
