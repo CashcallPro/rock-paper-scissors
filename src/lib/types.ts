@@ -29,8 +29,14 @@ export interface RoundResultData {
 }
 
 export interface OpponentMadeChoiceData {
-  message: string;
+  message:string;
   timerDetails?: { activeFor: string; duration: number }
+}
+
+export interface ReceivedReaction {
+  from: string;
+  to: string;
+  reaction: Reaction;
 }
 
 /**

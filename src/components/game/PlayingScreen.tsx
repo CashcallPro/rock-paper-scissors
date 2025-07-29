@@ -1,7 +1,7 @@
 "use client";
 import { Button } from 'primereact/button';
 import { ProgressBar } from 'primereact/progressbar';
-import { Choice, choiceEmojis, Reaction, reactionEmojis } from '../../lib'; // Adjust path if necessary
+import { Choice, choiceEmojis, Reaction, reactionEmojis, ReceivedReaction } from '../../lib'; // Adjust path if necessary
 import Image from 'next/image';
 
 interface PlayerDisplayProps {
@@ -46,7 +46,22 @@ interface PlayingScreenProps {
   sessionId: string | null;
   onPlayerChoice: (choice: Choice) => void;
   onReactionClick: (reaction: Reaction) => void;
+  lastReaction: ReceivedReaction | null;
+  myPlayerId: string | null;
 }
+
+const ReactionDisplay = ({ reaction, isOpponent }: { reaction: ReceivedReaction, isOpponent: boolean }) => {
+  if (!reaction) return null;
+
+  const emoji = reactionEmojis[reaction.reaction as Reaction];
+  const animationClass = isOpponent ? 'animate-reaction-opponent' : 'animate-reaction-player';
+
+  return (
+    <div className={`absolute text-5xl z-20 ${animationClass}`}>
+      {emoji}
+    </div>
+  );
+};
 
 export function PlayingScreen({
   myUsername, opponentUsername, winStreak, longestStreak, yourScore, opponentScore,
@@ -54,7 +69,12 @@ export function PlayingScreen({
   myChoiceEmoji, myChoiceAnimate, opponentChoiceEmoji, opponentChoiceAnimate,
   roundResult, roundReason, roundStatusMessage,
   hasMadeChoiceThisRound, isConnected, sessionId, onPlayerChoice, onReactionClick,
+  lastReaction, myPlayerId
 }: PlayingScreenProps) {
+
+  const showMyReaction = lastReaction && lastReaction.from === myPlayerId;
+  const showOpponentReaction = lastReaction && lastReaction.to === myPlayerId;
+
 
   return (
     <>
@@ -97,6 +117,7 @@ export function PlayingScreen({
           }}
         />
 
+        {showOpponentReaction && lastReaction && <ReactionDisplay reaction={lastReaction} isOpponent={true} />}
         <PlayerChoiceDisplay
           name={opponentUsername}
           emoji={opponentChoiceEmoji}
@@ -128,6 +149,7 @@ export function PlayingScreen({
           emoji={myChoiceEmoji}
           animate={myChoiceAnimate}
         />
+        {showMyReaction && lastReaction && <ReactionDisplay reaction={lastReaction} isOpponent={false} />}
       </div>
 
       <div className="z-10 flex flex-row sm:flex-row gap-y-2 sm:gap-x-3 pb-5 sm:mb-6 px-4 w-full" style={{ backgroundColor: '#861886' }}>

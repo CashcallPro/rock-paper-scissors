@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from 'react';
-import { Choice, ServerResult, GamePhase, choiceEmojis, MatchFoundData, RoundResultData, OpponentMadeChoiceData, API_URL_BOT_SCORE, SOCKET_SERVER_URL, SessionData, Reaction } from '../lib';
+import { Choice, ServerResult, GamePhase, choiceEmojis, MatchFoundData, RoundResultData, OpponentMadeChoiceData, API_URL_BOT_SCORE, SOCKET_SERVER_URL, SessionData, Reaction, ReceivedReaction } from '../lib';
 import { useSocketConnection } from './useSocketConnection';
 import { useTurnTimer } from './useTurnTimer';
 import { decryptFromUrl, getQueryParam } from '@/lib/decrypt';
@@ -72,7 +72,7 @@ export function useGameLogic() {
   const [gameEndReason, setGameEndReason] = useState<string>('');
   const [finalScores, setFinalScores] = useState<{ playerScore: number; opponentScore: number | undefined }>({ playerScore: 0, opponentScore: undefined });
   const [canPlayAgain, setCanPlayAgain] = useState<boolean>(true); // New state for canPlayAgain
-
+  const [lastReaction, setLastReaction] = useState<ReceivedReaction | null>(null);
 
   // Centralized game reset logic
   const resetGameToStart = useCallback((message?: string) => {
@@ -136,6 +136,13 @@ export function useGameLogic() {
       return () => clearTimeout(timer);
     }
   }, [opponentChoiceAnimate]);
+
+  useEffect(() => {
+    if (lastReaction) {
+      const timer = setTimeout(() => setLastReaction(null), 1000); // Reaction visible for 1s
+      return () => clearTimeout(timer);
+    }
+  }, [lastReaction]);
 
   // Socket Event Listeners
   useEffect(() => {
@@ -322,6 +329,10 @@ export function useGameLogic() {
       resetMyTurnTimer();
     };
 
+    const handleReceivedReaction = (data: ReceivedReaction) => {
+      setLastReaction(data);
+    };
+
     socket.on('match_found', handleMatchFound);
     socket.on('waiting_for_opponent', handleWaiting);
     socket.on('already_in_queue', handleAlreadyInQueue);
@@ -340,6 +351,7 @@ export function useGameLogic() {
     socket.on('opponent_forfeit_coins', handleOpponentForfeitCoins);
     socket.on('forfeit_coins', handleForfeitCoins);
     socket.on('game_ended_insufficient_funds', handleGameEndedInsufficientFunds); // Added listener
+    socket.on('received_reaction', handleReceivedReaction);
 
     return () => {
       socket.off('match_found', handleMatchFound);
@@ -360,6 +372,7 @@ export function useGameLogic() {
       socket.off('opponent_forfeit_coins', handleOpponentForfeitCoins);
       socket.off('forfeit_coins', handleForfeitCoins);
       socket.off('game_ended_insufficient_funds', handleGameEndedInsufficientFunds); // Added cleanup
+      socket.off('received_reaction', handleReceivedReaction);
     };
   }, [socket, hasMadeChoiceThisRound, longestStreak, gamePhase, resetMyTurnTimer, startMyTurnTimer, stopMyTurnTimer, resetGameToStart, yourScore, opponentScore]); // Added yourScore and opponentScore to dependencies for fallback logic
 
@@ -534,6 +547,7 @@ export function useGameLogic() {
     gameEndReason,
     finalScores,
     canPlayAgain, // Return canPlayAgain
+    lastReaction,
     // Actions
     setUsername,
     handlePlayerChoice,
