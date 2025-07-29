@@ -1,7 +1,7 @@
 "use client";
 import { Button } from 'primereact/button';
 import { ProgressBar } from 'primereact/progressbar';
-import { Choice, choiceEmojis } from '../../lib'; // Adjust path if necessary
+import { Choice, choiceEmojis, Reaction, reactionEmojis } from '../../lib'; // Adjust path if necessary
 import Image from 'next/image';
 
 interface PlayerDisplayProps {
@@ -45,6 +45,7 @@ interface PlayingScreenProps {
   isConnected: boolean;
   sessionId: string | null;
   onPlayerChoice: (choice: Choice) => void;
+  onReactionClick: (reaction: Reaction) => void;
 }
 
 export function PlayingScreen({
@@ -52,8 +53,9 @@ export function PlayingScreen({
   isMyTurnTimerActive, turnTimerProgress, turnTimeRemaining,
   myChoiceEmoji, myChoiceAnimate, opponentChoiceEmoji, opponentChoiceAnimate,
   roundResult, roundReason, roundStatusMessage,
-  hasMadeChoiceThisRound, isConnected, sessionId, onPlayerChoice
+  hasMadeChoiceThisRound, isConnected, sessionId, onPlayerChoice, onReactionClick,
 }: PlayingScreenProps) {
+
   return (
     <>
       <div className="z-10 w-full flex flex-col items-center py-4" style={{ backgroundColor: '#861886' }}>
@@ -95,12 +97,27 @@ export function PlayingScreen({
           }}
         />
 
-        <PlayerChoiceDisplay        
+        <PlayerChoiceDisplay
           name={opponentUsername}
           emoji={opponentChoiceEmoji}
           animate={opponentChoiceAnimate}
           isOpponent
         />
+
+        <div className='z-10 flex-col absolute left-5'>
+          {(Object.keys(reactionEmojis)).map(reaction => {
+            return (
+              <div className='w-10 h-10 items-center justify-center'>
+                <Button
+                  key={reaction}
+                  onClick={() => onReactionClick(reaction as Reaction)}
+                >
+                  <span className="text-3xl">{reactionEmojis[reaction]}</span>
+                </Button>
+              </div>
+            )
+          })}
+        </div>
 
         <div className="z-10 text-lg sm:text-xl font-medium h-auto min-h-[24px] text-white sm:min-h-[28px] my-1 sm:my-2 text-center px-2">
           {roundResult ? `${roundResult}${roundReason ? ` (${roundReason})` : ''}` : roundStatusMessage || <> </>}

@@ -34,7 +34,9 @@ function GamePageContent() {
     gameEndReason,
     finalScores,
     canPlayAgain, // Destructure canPlayAgain
-    setUsername, handlePlayerChoice, handleStartGame, handleEndGame, resetGameToStart, // Added resetGameToStart
+    setUsername, handlePlayerChoice,
+    handlePlayerReaction, handleStartGame,
+    handleEndGame, resetGameToStart, // Added resetGameToStart
   } = useGameLogic();
 
 
@@ -84,6 +86,7 @@ function GamePageContent() {
             isConnected={isConnected}
             sessionId={sessionId}
             onPlayerChoice={handlePlayerChoice}
+            onReactionClick={handlePlayerReaction}
           />
         );
       case 'gameEnded': // Add case for gameEnded

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from 'react';
-import { Choice, ServerResult, GamePhase, choiceEmojis, MatchFoundData, RoundResultData, OpponentMadeChoiceData, API_URL_BOT_SCORE, SOCKET_SERVER_URL, SessionData } from '../lib';
+import { Choice, ServerResult, GamePhase, choiceEmojis, MatchFoundData, RoundResultData, OpponentMadeChoiceData, API_URL_BOT_SCORE, SOCKET_SERVER_URL, SessionData, Reaction } from '../lib';
 import { useSocketConnection } from './useSocketConnection';
 import { useTurnTimer } from './useTurnTimer';
 import { decryptFromUrl, getQueryParam } from '@/lib/decrypt';
@@ -56,7 +56,7 @@ export function useGameLogic() {
   const [opponentScore, setOpponentScore] = useState<number | undefined>();
 
   // Game flow & multiplayer state
-  const [gamePhase, setGamePhase] = useState<GamePhase>('start');
+  const [gamePhase, setGamePhase] = useState<GamePhase>('playing');
   const [joiningCountdown, setJoiningCountdown] = useState<number>(2);
   const [username, setUsername] = useState<string>('');
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -408,6 +408,12 @@ export function useGameLogic() {
     stopMyTurnTimer();
   }, [socket, sessionId, hasMadeChoiceThisRound, isConnected, stopMyTurnTimer]);
 
+  const handlePlayerReaction = (reaction: Reaction) => {
+    if (!socket || !sessionId || !isConnected) return
+
+    socket.emit('make_reaction', { sessionId, reaction })
+  }
+
   const handleStartGame = useCallback(() => {
 
     const hash = window.location.hash.slice(1);
@@ -531,6 +537,7 @@ export function useGameLogic() {
     // Actions
     setUsername,
     handlePlayerChoice,
+    handlePlayerReaction,
     handleStartGame,
     handleEndGame,
     handleCancelSearch, // Exposed if you want a direct cancel button

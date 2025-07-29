@@ -6,6 +6,8 @@ export interface TelegramUser {
   language_code?: string;
 }
 
+export type Reaction = 'shit' | 'fire' | 'laugh' | 'silence'
+
 export type Choice = 'rock' | 'paper' | 'scissors';
 
 export type ServerResult = 'You won!' | 'You lost!' | "It's a tie!" | '';
@@ -27,8 +29,8 @@ export interface RoundResultData {
 }
 
 export interface OpponentMadeChoiceData {
-    message: string;
-    timerDetails?: { activeFor: string; duration: number }
+  message: string;
+  timerDetails?: { activeFor: string; duration: number }
 }
 
 /**
