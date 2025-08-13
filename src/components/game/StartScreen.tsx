@@ -15,6 +15,7 @@ interface StartScreenProps {
   userActionMessage: string;
   longestStreak: number;
   isConnected: boolean;
+  isUsernameFromQuery: boolean;
 }
 
 export function StartScreen({
@@ -25,45 +26,22 @@ export function StartScreen({
   userActionMessage,
   longestStreak,
   isConnected,
+  isUsernameFromQuery,
 }: StartScreenProps) {
-
-  const [queryUsername, setQueryusername] = useState<string>()
-  const [user, setUser] = useState<UserProfile>()
-  // const rawLaunchParams = useLaunchParams()
-  // const rawInitData = useRawInitData()
+  const [user, setUser] = useState<UserProfile | null>(null);
 
   useEffect(() => {
-
-    // const { initDataRaw, initData } = retrieveLaunchParams();
-
-    // console.log({ initDataRaw })
-    // console.log({ initData })
-
-    // console.log({ query: rawLaunchParams })
-    // console.log({ rawInitData: rawInitData })
-
-    const hash = window.location.hash.slice(1);
-    const params = new URLSearchParams(hash);
-    const tgWebAppData = params.get('tgWebAppData');
-    const webAppParams = new URLSearchParams(tgWebAppData!);
-    const userJsonString = webAppParams.get('user');
-    const userObject = JSON.parse(userJsonString!);
-
-    // const decryptedQuery = decryptFromUrl(query)
-    const queryUsername = userObject.username//getQueryParam(decryptedQuery, 'username')
-
-    if (queryUsername) {
-      setUsername(queryUsername)
-      setQueryusername(queryUsername)
-
-      fetch(`${SOCKET_SERVER_URL}/users/${queryUsername}`)
+    if (username) {
+      fetch(`${SOCKET_SERVER_URL}/users/${username}`)
         .then(res => res.json())
         .then(resJson => {
-          setUser(resJson)
+          if (resJson) {
+            setUser(resJson);
+          }
         })
+        .catch(err => console.error("Failed to fetch user:", err));
     }
-
-  }, [])
+  }, [username]);
 
   return (
     <Suspense>
@@ -105,7 +83,7 @@ export function StartScreen({
                 }}
                 onKeyUp={(e) => e.key === 'Enter' && onStartGame()}
                 placeholder="wait"
-                disabled={!!queryUsername} // Disable if username from query
+                disabled={isUsernameFromQuery} // Disable if username from query
               />
             </span>
           </div>

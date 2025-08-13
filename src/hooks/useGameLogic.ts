@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from 'react';
-import { Choice, ServerResult, GamePhase, choiceEmojis, MatchFoundData, RoundResultData, OpponentMadeChoiceData, API_URL_BOT_SCORE, SOCKET_SERVER_URL, SessionData, Reaction } from '../lib';
+import { Choice, ServerResult, GamePhase, choiceEmojis, MatchFoundData, RoundResultData, OpponentMadeChoiceData, API_URL_BOT_SCORE, SOCKET_SERVER_URL, SessionData, Reaction, TelegramUser } from '../lib';
 import { useSocketConnection } from './useSocketConnection';
 import { useTurnTimer } from './useTurnTimer';
 import { decryptFromUrl, getQueryParam } from '@/lib/decrypt';
@@ -56,9 +56,11 @@ export function useGameLogic() {
   const [opponentScore, setOpponentScore] = useState<number | undefined>();
 
   // Game flow & multiplayer state
-  const [gamePhase, setGamePhase] = useState<GamePhase>('playing');
+  const [gamePhase, setGamePhase] = useState<GamePhase>('loading');
   const [joiningCountdown, setJoiningCountdown] = useState<number>(2);
   const [username, setUsername] = useState<string>('');
+  const [isUsernameFromQuery, setIsUsernameFromQuery] = useState<boolean>(false);
+  const [telegramUser, setTelegramUser] = useState<TelegramUser | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [myServerConfirmedUsername, setMyServerConfirmedUsername] = useState<string | null>(null);
   const [opponentUsername, setOpponentUsername] = useState<string | null>(null);
@@ -72,6 +74,32 @@ export function useGameLogic() {
   const [gameEndReason, setGameEndReason] = useState<string>('');
   const [finalScores, setFinalScores] = useState<{ playerScore: number; opponentScore: number | undefined }>({ playerScore: 0, opponentScore: undefined });
   const [canPlayAgain, setCanPlayAgain] = useState<boolean>(true); // New state for canPlayAgain
+
+
+  // Effect to parse user data from URL hash on component mount
+  useEffect(() => {
+    try {
+      const hash = window.location.hash.slice(1);
+      if (!hash) return;
+
+      const params = new URLSearchParams(hash);
+      const tgWebAppData = params.get('tgWebAppData');
+      if (!tgWebAppData) return;
+
+      const webAppParams = new URLSearchParams(tgWebAppData);
+      const userJsonString = webAppParams.get('user');
+      if (userJsonString) {
+        const userObject: TelegramUser = JSON.parse(userJsonString);
+        setTelegramUser(userObject);
+        if (userObject.username) {
+          setUsername(userObject.username);
+          setIsUsernameFromQuery(true);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to parse user data from URL:", error);
+    }
+  }, []); // Empty dependency array ensures this runs only once on mount
 
 
   // Centralized game reset logic
@@ -120,6 +148,18 @@ export function useGameLogic() {
     setGameEndReason, setFinalScores, setCanPlayAgain, // Added setCanPlayAgain
     stopMyTurnTimer, resetMyTurnTimer
   ]);
+
+
+  // This effect runs once when the component mounts.
+  useEffect(() => {
+    // It checks if the game is in the 'loading' phase and if the socket is connected.
+    if (gamePhase === 'loading' && isConnected && telegramUser) {
+      // If both conditions are true, it transitions the game to the 'start' phase.
+      setGamePhase('start');
+    }
+    // The dependency array [gamePhase, isConnected, setGamePhase] ensures this effect
+    // re-runs whenever any of these values change.
+  }, [gamePhase, isConnected, telegramUser, setGamePhase]);
 
 
   // Animation Triggers
@@ -415,38 +455,25 @@ export function useGameLogic() {
   }
 
   const handleStartGame = useCallback(() => {
-
-    const hash = window.location.hash.slice(1);
-    // console.log(hash); // tgWebAppData=...&tgWebAppVersion=6.2&...
-
-    const params = new URLSearchParams(hash);
-    // console.log({ version: params.get('tgWebAppVersion') });
-
-    const tgWebAppData = params.get('tgWebAppData');
-
-    // 4. Parse the inner tgWebAppData string
-    const webAppParams = new URLSearchParams(tgWebAppData!);
-
-    // 5. Get the 'user' data, which is a JSON string
-    const userJsonString = webAppParams.get('user');
-
-    // 6. Parse the JSON string into a JavaScript object
-    const userObject = JSON.parse(userJsonString!)
-
-    // const query = window.location.search
-    // const decryptedQuery = decryptFromUrl(query)
-    const nameFromQuery = userObject.username////getQueryParam(decryptedQuery, 'username')
-    const telegramUserId = userObject.id// //getQueryParam(decryptedQuery, 'userId')
-    const groupOwner = undefined//getQueryParam(decryptedQuery, 'owner')
-    const finalUsername = nameFromQuery || username.trim();
-
-    if (!finalUsername) {
-      setUserActionMessage("Please enter a username or ensure it's provided via query.");
+    if (!telegramUser) {
+      setUserActionMessage("User data is not loaded yet. Please wait.");
       return;
     }
+
+    const finalUsername = telegramUser.username || username.trim();
+
+    if (!finalUsername) {
+      setUserActionMessage("Please enter a username.");
+      return;
+    }
+
     if (socket && isConnected) {
-      socket.emit('start', { username: finalUsername, userId: telegramUserId, groupOwner });
-      if (!nameFromQuery) setUsername(finalUsername);
+      socket.emit('start', {
+        username: finalUsername,
+        userId: telegramUser.id,
+        groupOwner: undefined // Or handle this from query if needed
+      });
+      if (!telegramUser.username) setUsername(finalUsername);
       setUserActionMessage('');
       setGamePhase('searching');
       setRoundStatusMessage('Searching for an opponent...');
@@ -454,7 +481,7 @@ export function useGameLogic() {
       setUserActionMessage("Cannot connect to server. Please wait or check server status.");
       if (socket && !isConnected) connectSocket();
     }
-  }, [socket, isConnected, username, connectSocket]);
+  }, [socket, isConnected, username, telegramUser, connectSocket]);
 
   // Explicit function to cancel search, if needed for a specific button
   // This essentially does what resetGameToStart would do if called from 'searching'
@@ -523,12 +550,13 @@ export function useGameLogic() {
 
   return {
     // State
-    gamePhase, username, myServerConfirmedUsername, opponentUsername,
+    gamePhase, username, telegramUser, myServerConfirmedUsername, opponentUsername,
     myChoiceEmoji, myChoiceAnimate, opponentChoiceEmoji, opponentChoiceAnimate,
     roundResult, roundReason, winStreak, longestStreak, yourScore, opponentScore,
     socketConnectionMessage, userActionMessage, roundStatusMessage,
     hasMadeChoiceThisRound, isConnected, sessionId,
     isMyTurnTimerActive, turnTimerDuration, turnTimeRemaining, turnTimerProgress,
+    isUsernameFromQuery,
     joiningCountdown,
     // New state for game ended phase
     gameEndReason,
