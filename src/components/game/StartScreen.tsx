@@ -89,7 +89,7 @@ export function StartScreen({
             onClick={onStartGame}
             disabled={!isConnected} />
           <div className="flex items-center justify-center text-white z-10">
-            <span>10 +&nbsp;</span>
+            <span>10&nbsp;</span>
             <Image src="/gem.png" alt="gem" width={20} height={20} className="mx-1" />
             <span>&nbsp;per round</span>
           </div>

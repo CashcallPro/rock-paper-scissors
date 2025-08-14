@@ -2,6 +2,7 @@
 
 import Header from "@/components/Header";
 import { ShopItemCard } from "@/components/ShopItemCard";
+import { useUser } from "@/context/UserContext";
 import { UserProfile } from "@/lib/types";
 
 const mockUser: UserProfile = {
@@ -28,9 +29,12 @@ const tickets = [
 ];
 
 export default function Shop() {
+
+  const { userProfile } = useUser()
+
   return (
     <div className="bg-gray-800 min-h-screen text-white">
-      <Header user={mockUser} />
+      <Header user={userProfile} />
       <main className="p-4">
         <h1 className="text-4xl font-bold text-center mb-8">Shop</h1>
         <div className="flex justify-center gap-8">
