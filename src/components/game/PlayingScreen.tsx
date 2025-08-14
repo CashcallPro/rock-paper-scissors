@@ -4,6 +4,7 @@ import { ProgressBar } from 'primereact/progressbar';
 import { Choice, choiceEmojis, Reaction, reactionEmojis } from '../../lib'; // Adjust path if necessary
 import Image from 'next/image';
 import PlayingHeader from './PlayingHeader';
+import { memo } from 'react';
 import { useUser } from '../../context/UserContext';
 
 interface PlayerDisplayProps {
@@ -51,7 +52,7 @@ interface PlayingScreenProps {
   onReactionClick: (reaction: Reaction) => void;
 }
 
-export function PlayingScreen({
+export const PlayingScreen = memo(function PlayingScreen({
   myUsername, opponentUsername, winStreak, longestStreak, yourScore, opponentScore,
   isMyTurnTimerActive, turnTimerProgress, turnTimeRemaining,
   myChoiceEmoji, myChoiceAnimate, opponentChoiceEmoji, opponentChoiceAnimate,
@@ -154,4 +155,4 @@ export function PlayingScreen({
       </div>
     </>
   );
-}
+});
