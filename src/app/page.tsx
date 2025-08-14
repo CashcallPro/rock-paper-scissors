@@ -151,7 +151,7 @@ function GamePageContent() {
                              ${!isConnected ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95'} z-10`}
             >
               <Image
-                src="/btn-giveup.svg" // Path relative to the public folder
+                src="/giveup.png" // Path relative to the public folder
                 alt="Start Game"
                 width={90} // Specify a base width (adjust as needed)
                 height={40} // Specify a base height (adjust as needed)
@@ -161,10 +161,7 @@ function GamePageContent() {
             </button>
           </div>
         )}
-        <div className={`w-full h-full flex flex-col items-center ${gamePhase === 'playing' ? 'justify-between' : 'justify-center'}`}>
-          <Header
-            user={userProfile}
-          />
+        <div className={`w-full h-full flex flex-col items-center ${gamePhase === 'playing' ? 'justify-between' : 'justify-center'}`}>          
           {renderGameContent()}
         </div>
       </div>

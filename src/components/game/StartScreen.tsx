@@ -7,6 +7,7 @@ import { BattleButton } from '../BattleButton';
 import { HeaderButton } from '../HeaderButton';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Header from '../Header';
 
 
 
@@ -31,12 +32,16 @@ export function StartScreen({
   longestStreak,
   isConnected,
   isUsernameFromQuery,
+  userProfile
 }: StartScreenProps) {
   const router = useRouter();
 
   return (
     <Suspense>
       <>
+        <Header
+          user={userProfile}
+        />ƒ
         <div className="flex items-start z-10 w-full p-2 justify-between">
           <Link href="/shop">
             <HeaderButton onClick={() => { }} backgroundImage="url('/shop.png')" />
@@ -60,13 +65,11 @@ export function StartScreen({
               bottom: 0,
               right: 0,
               left: 0,
-              filter: 'brightness(0.5)',
+              filter: 'brightness(0.6)',
             }}
           />
-          <h1 style={{ color: 'white' }}>Welcome to</h1>
-          <h1 className="text-8xl font-bold z-10" style={{ color: 'white' }}>RPS</h1>
-          <h1 className="text-6xl font-bold z-10 mb-6" style={{ color: 'white' }}>ArenA</h1>
-
+          <h1 className='z-10' style={{ color: 'white' }}>Welcome to</h1>
+          <Image src={"/logo_rpstitan.png"} alt='logo' width={200} height={140} className='z-10 mb-16' />
           <BattleButton
             onClick={onStartGame}
             disabled={!isConnected} />

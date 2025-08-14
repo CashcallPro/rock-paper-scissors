@@ -8,8 +8,7 @@ interface OpponentFoundScreenProps {
 
 export function OpponentFoundScreen({ myUsername, opponentUsername }: OpponentFoundScreenProps) {
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full text-center px-4"
-      style={{ backgroundImage: "url('/start-bg.png')" }}>
+    <div className="flex flex-col items-center justify-center w-full h-full text-center px-4">
       <Image
         alt=''
         src="/start-bg.png"
