@@ -1,34 +1,60 @@
-import React from 'react';
+"use client";
+
+import React, { useState } from 'react';
 import { UserProfile } from '../lib/types';
+import Popup from './Popup';
+import { HeaderButton } from './HeaderButton';
+
 
 interface HeaderProps {
   user: UserProfile | null;
 }
 
 const Header: React.FC<HeaderProps> = ({ user }) => {
+  const [isEnergyPopupOpen, setIsEnergyPopupOpen] = useState(false);
+  const [isTicketPopupOpen, setIsTicketPopupOpen] = useState(false);
+
   if (!user) {
     return null; // Don't render the header if there is no user
   }
 
   return (
-    <div className="w-full bg-gray-800 text-white p-2 flex items-center justify-between sticky top-0 z-20">
-      <div className="flex items-center">
-        {user.photo_url ? (
-          <img src={user.photo_url} alt={user.username} className="w-10 h-10 rounded-full mr-3" />
-        ) : (
-          <div className="w-10 h-10 rounded-full bg-gray-500 mr-3"></div>
-        )}
-        <span className="font-bold text-lg">{user.username}</span>
-      </div>
-      <div className="flex items-center text-lg">
-        <div className="mr-5">
-          <span role="img" aria-label="energy">⚡️</span> {user.coins ?? 0}
+    <>
+      <div className="w-full bg-gray-800 text-white p-2 flex items-center justify-between sticky top-0 z-20">
+        <div className="flex items-center">
+          {user.photo_url ? (
+            <img src={user.photo_url} alt={user.username} className="w-10 h-10 rounded-full mr-3" />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-gray-500 mr-3"></div>
+          )}
+          <span className="font-bold text-lg">{user.username}</span>
         </div>
-        <div>
-          <span role="img" aria-label="tickets">🎟️</span> {user.tickets ?? 0}
+        <div className="flex items-center text-lg space-x-2">
+          <HeaderButton onClick={() => setIsEnergyPopupOpen(true)} backgroundImage="url('/gem.png')" />
+          <span role="img" aria-label="energy">{user.coins ?? 0}</span>
+          <HeaderButton onClick={() => setIsTicketPopupOpen(true)} backgroundImage="url('/ticket.png')" />
+          <span role="img" aria-label="tickets">{user.tickets ?? 0}</span>
         </div>
       </div>
-    </div>
+      <Popup isOpen={isEnergyPopupOpen} onClose={() => setIsEnergyPopupOpen(false)}>
+        <div className="text-center">
+          <h2 className="text-white text-2xl mb-4">Energy</h2>
+          <p className="text-white mb-4">You can convert tickets to energy.</p>
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Convert Ticket to Energy
+          </button>
+        </div>
+      </Popup>
+      <Popup isOpen={isTicketPopupOpen} onClose={() => setIsTicketPopupOpen(false)}>
+        <div className="text-center">
+          <h2 className="text-white text-2xl mb-4">Tickets</h2>
+          <p className="text-white mb-4">You can purchase more tickets.</p>
+          <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            Purchase
+          </button>
+        </div>
+      </Popup>
+    </>
   );
 };
 
