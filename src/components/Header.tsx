@@ -5,6 +5,7 @@ import { UserProfile } from '../lib/types';
 import Popup from './Popup';
 import { HeaderButton } from './HeaderButton';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 
 interface HeaderProps {
@@ -34,7 +35,10 @@ const Header: React.FC<HeaderProps> = ({ user, variant = 'default' }) => {
         <div className="flex items-center">
           {variant === 'back' ? (
             <button onClick={goBack} className="mr-3">
-              <img src="/back-arrow.svg" alt="Back" className="w-6 h-6" />
+              <div className='flex flex-row'>
+                <img src="/back-arrow.svg" alt="Back" className="w-6 h-6" />
+                back
+              </div>
             </button>
           ) : (
             <>
