@@ -60,28 +60,13 @@ export function StartScreen({
               bottom: 0,
               right: 0,
               left: 0,
+              filter: 'brightness(0.5)',
             }}
           />
+          <h1 style={{ color: 'white' }}>Welcome to</h1>
           <h1 className="text-8xl font-bold z-10" style={{ color: 'white' }}>RPS</h1>
           <h1 className="text-6xl font-bold z-10 mb-6" style={{ color: 'white' }}>ArenA</h1>
-          <div className="p-fluid mb-4 w-full max-w-xs">
-            <span className="p-float-label flex-col">
-              <h1 style={{ color: 'white' }}>Welcome to Battle</h1>
-              <InputText
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full p-inputtext-lg text-4xl"
-                style={{
-                  textAlign: 'center',
-                  color: 'white',
-                }}
-                onKeyUp={(e) => e.key === 'Enter' && onStartGame()}
-                placeholder="wait"
-                disabled={isUsernameFromQuery} // Disable if username from query
-              />
-            </span>
-          </div>
+
           <BattleButton
             onClick={onStartGame}
             disabled={!isConnected} />
@@ -95,7 +80,7 @@ export function StartScreen({
               {userActionMessage || connectionMessage || (!isConnected && "Connecting...")}
             </p>
           )}
-          <div className="mt-8 text-xl font-medium z-10" style={{ color: 'white' }}>Longest Streak: {longestStreak}</div>
+          {/* <div className="mt-8 text-xl font-medium z-10" style={{ color: 'white' }}>Longest Streak: {longestStreak}</div> */}
         </div>
       </>
     </Suspense>
