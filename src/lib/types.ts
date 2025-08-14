@@ -58,6 +58,8 @@ export interface Match {
 export interface UserProfile {
   readonly _id: string;        // Unique identifier for the user (e.g., MongoDB ObjectId)
   username: string;           // The user's username
+  tickets: number;            // The number of tickets the user has
+  photo_url?: string;         // The URL of the user's profile picture
   coins: number;              // The number of coins the user has
   readonly createdAt: string;  // ISO date string of when the user profile was created
   updatedAt: string;          // ISO date string of when the user profile was last updated
