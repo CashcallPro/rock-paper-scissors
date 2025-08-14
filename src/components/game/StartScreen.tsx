@@ -36,16 +36,17 @@ export function StartScreen({
   return (
     <Suspense>
       <>
+        <div className="items-start z-10 w-full">
+          <HeaderButton
+            onClick={() => router.push('/shop')}
+            backgroundImage="url('/shop.png')"
+          />
+        </div>
         <div
           className="w-full flex flex-col items-center justify-center h-full text-center px-4"
           style={{ backgroundColor: "transparent" }}
         >
-          <div className="absolute top-4 right-4 z-10">
-            <HeaderButton
-              onClick={() => router.push('/shop')}
-              backgroundImage="url('/shop.png')"
-            />
-          </div>
+
           <Image
             alt=''
             src="/start-bg.png"
@@ -81,7 +82,7 @@ export function StartScreen({
           </div>
           <BattleButton
             onClick={onStartGame}
-            disabled={!isConnected} />          
+            disabled={!isConnected} />
           <p className='text-white z-10'>10 energy per round</p>
           {(connectionMessage || userActionMessage) && (
             <p className="mt-4 text-sm text-red-500 z-10">
