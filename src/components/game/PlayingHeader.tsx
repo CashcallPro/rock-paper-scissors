@@ -16,7 +16,7 @@ const PlayingHeader: React.FC<PlayingHeaderProps> = ({ user, opponent, userScore
     if (!profile) {
       return (
         <div className={`flex items-center ${isOpponent ? 'flex-row-reverse' : ''}`}>
-          <div className="w-10 h-10 rounded-full bg-gray-500 mr-3 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-gray-500 m-2 flex items-center justify-center">
             <Image src="/armor.png" alt="default avatar" width={32} height={32} />
           </div>
           <span className="font-bold text-lg">Waiting...</span>
@@ -27,9 +27,9 @@ const PlayingHeader: React.FC<PlayingHeaderProps> = ({ user, opponent, userScore
     return (
       <div className={`flex items-center ${isOpponent ? 'flex-row-reverse' : ''}`}>
         {profile.photo_url ? (
-          <Image src={profile.photo_url} alt={profile.username} width={40} height={40} className="w-10 h-10 rounded-full mr-3" />
+          <Image src={profile.photo_url} alt={profile.username} width={40} height={40} className="w-10 h-10 rounded-full m-2" />
         ) : (
-          <div className="w-10 h-10 rounded-full bg-gray-500 mr-3 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-gray-500 m-2 flex items-center justify-center">
             <Image src="/armor.png" alt={profile.username} width={32} height={32} />
           </div>
         )}
