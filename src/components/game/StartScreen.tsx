@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { SOCKET_SERVER_URL, UserProfile } from '@/lib';
 import { retrieveLaunchParams, useLaunchParams, } from '@telegram-apps/sdk-react';
+import { BattleButton } from '../BattleButton';
 
 
 
@@ -71,21 +72,9 @@ export function StartScreen({
               />
             </span>
           </div>
-          <button
+          <BattleButton
             onClick={onStartGame}
-            disabled={!isConnected} // Apply disabled state to the button wrapper
-            className={`focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform duration-150 ease-in-out z-10
-                      ${!isConnected ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95'}`}
-          >
-            <Image
-              src="/btn-play.svg" // Path relative to the public folder
-              alt="Start Game"
-              width={250} // Specify a base width (adjust as needed)
-              height={80} // Specify a base height (adjust as needed)
-              className={`object-contain ${!isConnected ? '' : 'cursor-pointer'}`}
-              priority // If it's an LCP element
-            />
-          </button>
+            disabled={!isConnected} />          
           <p className='text-white z-10'>10 energy per round</p>
           {(connectionMessage || userActionMessage) && (
             <p className="mt-4 text-sm text-red-500 z-10">
