@@ -3,6 +3,8 @@ import { Button } from 'primereact/button';
 import { ProgressBar } from 'primereact/progressbar';
 import { Choice, choiceEmojis, Reaction, reactionEmojis } from '../../lib'; // Adjust path if necessary
 import Image from 'next/image';
+import PlayingHeader from './PlayingHeader';
+import { useUser } from '../../context/UserContext';
 
 interface PlayerDisplayProps {
   name: string | null;
@@ -55,22 +57,16 @@ export function PlayingScreen({
   roundResult, roundReason, roundStatusMessage,
   hasMadeChoiceThisRound, isConnected, sessionId, onPlayerChoice, onReactionClick,
 }: PlayingScreenProps) {
+  const { userProfile, opponentProfile } = useUser();
 
   return (
     <>
-      <div className="z-10 w-full flex flex-col items-center py-4" style={{ backgroundColor: '#861886' }}>
-        <h1 className="text-3xl sm:text-2xl font-bold mb-1 pt-4 md:pt-2 mt-8 text-center px-2 text-white">
-          {myUsername || 'You'} vs {opponentUsername || 'Opponent'}
-        </h1>
-        <div className="z-10 flex flex-row space-x-4 md:space-x-6 text-base sm:text-lg md:text-xl font-medium mb-2 text-center">
-          <div className='text-red'>Win Streak: {winStreak}</div>
-          <div>Longest Streak: {longestStreak}</div>
-        </div>
-        <div className="z-10 flex flex-row space-x-4 md:space-x-6 text-base sm:text-lg md:text-xl font-medium mb-2 text-center">
-          <div>Your Score: {yourScore}</div>
-          <div>Opponent Score: {opponentScore ?? '-'}</div>
-        </div>
-      </div>
+      <PlayingHeader
+        user={userProfile}
+        opponent={opponentProfile}
+        userScore={yourScore}
+        opponentScore={opponentScore ?? 0}
+      />
 
       {isMyTurnTimerActive && (
         <div className="w-full max-w-md px-4 my-2 z-10">

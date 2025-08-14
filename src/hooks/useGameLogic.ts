@@ -36,7 +36,7 @@ interface GameEndedInsufficientFundsData {
 }
 
 export function useGameLogic() {
-  const { telegramUser, userProfile, username, setUsername, isUsernameFromQuery } = useUser();
+  const { telegramUser, userProfile, username, setUsername, isUsernameFromQuery, setOpponentProfile } = useUser();
   const { socket, isConnected, connectionMessage: socketConnectionMessage, connectSocket } = useSocketConnection(SOCKET_SERVER_URL);
   const {
     isMyTurnTimerActive, turnTimerDuration, turnTimeRemaining, turnTimerProgress,
@@ -167,6 +167,17 @@ export function useGameLogic() {
       setUserActionMessage('');
       setHasMadeChoiceThisRound(false);
       resetMyTurnTimer();
+
+      if (data.opponent) {
+        fetch(`${SOCKET_SERVER_URL}/users/${data.opponent}`)
+          .then(res => res.json())
+          .then(profile => {
+            if (profile) {
+              setOpponentProfile(profile);
+            }
+          })
+          .catch(error => console.error('Failed to fetch opponent profile:', error));
+      }
     };
 
     const handleWaiting = (data: { message: string }) => {
@@ -373,7 +384,7 @@ export function useGameLogic() {
       socket.off('forfeit_coins', handleForfeitCoins);
       socket.off('game_ended_insufficient_funds', handleGameEndedInsufficientFunds); // Added cleanup
     };
-  }, [socket, hasMadeChoiceThisRound, longestStreak, gamePhase, resetMyTurnTimer, startMyTurnTimer, stopMyTurnTimer, resetGameToStart, yourScore, opponentScore]); // Added yourScore and opponentScore to dependencies for fallback logic
+  }, [socket, hasMadeChoiceThisRound, longestStreak, gamePhase, resetMyTurnTimer, startMyTurnTimer, stopMyTurnTimer, resetGameToStart, yourScore, opponentScore, setOpponentProfile]); // Added yourScore and opponentScore to dependencies for fallback logic
 
   // Game Phase Transitions (no changes here)
   useEffect(() => {
