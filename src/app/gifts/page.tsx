@@ -16,9 +16,9 @@ const mockUser: UserProfile = {
 };
 
 const gifts = [
-  { icon: "/gift.png", name: "Gift Card 1" },
-  { icon: "/gift.png", name: "Gift Card 2" },
-  { icon: "/gift.png", name: "Gift Card 3" },
+  { icon: "/gem.png", name: "Check in daily" },
+  { icon: "/ticket.png", name: "Follow twitter" },
+  { icon: "/ticket.png", name: "Play 3 mathces" },
 ];
 
 export default function Gifts() {

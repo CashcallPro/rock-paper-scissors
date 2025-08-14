@@ -34,12 +34,6 @@ const Header: React.FC<HeaderProps> = ({ user }) => {
           <span className="font-bold text-lg">{user.username}</span>
         </div>
         <div className="flex items-center text-lg space-x-4">
-          <Link href="/shop">
-            <HeaderButton onClick={() => {}} backgroundImage="url('/shop.png')" />
-          </Link>
-          <Link href="/gifts">
-            <HeaderButton onClick={() => {}} backgroundImage="url('/gift.png')" />
-          </Link>
           <div className='flex items-center space-x-2'>
             <HeaderButton ref={energyButtonRef} onClick={() => setIsEnergyPopupOpen(true)} backgroundImage="url('/gem.png')" />
             <span role="img" aria-label="energy">{user.coins ?? 0}</span>
