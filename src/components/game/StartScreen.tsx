@@ -6,6 +6,7 @@ import { UserProfile } from '@/lib';
 import { BattleButton } from '../BattleButton';
 import { HeaderButton } from '../HeaderButton';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 
 
@@ -36,22 +37,18 @@ export function StartScreen({
   return (
     <Suspense>
       <>
-        <div className="items-start z-10 w-full p-2">
-          <HeaderButton
-            onClick={() => router.push('/shop')}
-            backgroundImage="url('/shop.png')"
-          />
+        <div className="flex items-start z-10 w-full p-2 justify-between">
+          <Link href="/shop">
+            <HeaderButton onClick={() => { }} backgroundImage="url('/shop.png')" />
+          </Link>
+          <Link href="/gifts">
+            <HeaderButton onClick={() => { }} backgroundImage="url('/gift.png')" />
+          </Link>
         </div>
         <div
           className="w-full flex flex-col items-center justify-center h-full text-center px-4"
           style={{ backgroundColor: "transparent" }}
         >
-          <div className="absolute top-4 right-4 z-10">
-            <HeaderButton
-              onClick={() => router.push('/shop')}
-              backgroundImage="url('/shop.png')"
-            />
-          </div>
           <Image
             alt=''
             src="/start-bg.png"

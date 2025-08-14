@@ -4,6 +4,7 @@ import React, { useState, useRef } from 'react';
 import { UserProfile } from '../lib/types';
 import Popup from './Popup';
 import { HeaderButton } from './HeaderButton';
+import Link from 'next/link';
 
 
 interface HeaderProps {
@@ -32,11 +33,15 @@ const Header: React.FC<HeaderProps> = ({ user }) => {
           )}
           <span className="font-bold text-lg">{user.username}</span>
         </div>
-        <div className="flex items-center text-lg space-x-2">
-          <HeaderButton ref={energyButtonRef} onClick={() => setIsEnergyPopupOpen(true)} backgroundImage="url('/gem.png')" />
-          <span role="img" aria-label="energy">{user.coins ?? 0}</span>
-          <HeaderButton ref={ticketButtonRef} onClick={() => setIsTicketPopupOpen(true)} backgroundImage="url('/ticket.png')" />
-          <span role="img" aria-label="tickets">{user.tickets ?? 0}</span>
+        <div className="flex items-center text-lg space-x-4">
+          <div className='flex items-center space-x-2'>
+            <HeaderButton ref={energyButtonRef} onClick={() => setIsEnergyPopupOpen(true)} backgroundImage="url('/gem.png')" />
+            <span role="img" aria-label="energy">{user.coins ?? 0}</span>
+          </div>
+          <div className='flex items-center space-x-2'>
+            <HeaderButton ref={ticketButtonRef} onClick={() => setIsTicketPopupOpen(true)} backgroundImage="url('/ticket.png')" />
+            <span role="img" aria-label="tickets">{user.tickets ?? 0}</span>
+          </div>
         </div>
       </div>
       <Popup isOpen={isEnergyPopupOpen} onClose={() => setIsEnergyPopupOpen(false)} buttonRef={energyButtonRef}>
