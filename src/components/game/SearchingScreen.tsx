@@ -20,6 +20,7 @@ export function SearchingScreen({ usernameToDisplay }: SearchingScreenProps) {
           bottom: 0,
           right: 0,
           left: 0,
+          filter: 'brightness(0.5)',
         }}
       />
       {usernameToDisplay && <p className="mt-4 text-white bold z-10">{usernameToDisplay} are you ready to rock?</p>}

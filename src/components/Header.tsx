@@ -45,7 +45,9 @@ const Header: React.FC<HeaderProps> = ({ user, variant = 'default' }) => {
               {user.photo_url ? (
                 <img src={user.photo_url} alt={user.username} className="w-10 h-10 rounded-full mr-3" />
               ) : (
-                <div className="w-10 h-10 rounded-full bg-gray-500 mr-3"></div>
+                <div className="w-10 h-10 rounded-full bg-gray-500 mr-3 flex items-center justify-center">
+                  <img src="/armor.png" alt={user.username} className="w-8 h-8" />
+                </div>
               )}
               <span className="font-bold text-lg">{user.username}</span>
             </>
