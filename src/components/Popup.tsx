@@ -4,7 +4,7 @@ interface PopupProps {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
-  buttonRef: React.RefObject<HTMLButtonElement>;
+  buttonRef: React.RefObject<HTMLButtonElement | null>;
 }
 
 const Popup: React.FC<PopupProps> = ({ isOpen, onClose, children, buttonRef }) => {
@@ -12,7 +12,7 @@ const Popup: React.FC<PopupProps> = ({ isOpen, onClose, children, buttonRef }) =
   const popupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (isOpen && buttonRef.current) {
+    if (isOpen && buttonRef?.current) {
       const buttonRect = buttonRef.current.getBoundingClientRect();
       const popupWidth = 260; // Keep this in sync with the width in the style attribute
       setPosition({

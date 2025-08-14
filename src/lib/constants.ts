@@ -11,7 +11,7 @@ export const choiceEmojis = {
 export const API_URL_BOT_SCORE = `${SOCKET_SERVER_URL}/bot/score`;
 
 
-export const reactionEmojis = {
+export const reactionEmojis: Record<string, string> = {
   shit: '💩',
   fire: '🔥',
   laugh: '😆',
