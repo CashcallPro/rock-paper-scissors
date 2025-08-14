@@ -16,6 +16,7 @@ interface StartScreenProps {
   longestStreak: number;
   isConnected: boolean;
   isUsernameFromQuery: boolean;
+  userProfile: UserProfile | null;
 }
 
 export function StartScreen({
@@ -27,21 +28,8 @@ export function StartScreen({
   longestStreak,
   isConnected,
   isUsernameFromQuery,
+  userProfile,
 }: StartScreenProps) {
-  const [user, setUser] = useState<UserProfile | null>(null);
-
-  useEffect(() => {
-    if (username) {
-      fetch(`${SOCKET_SERVER_URL}/users/${username}`)
-        .then(res => res.json())
-        .then(resJson => {
-          if (resJson) {
-            setUser(resJson);
-          }
-        })
-        .catch(err => console.error("Failed to fetch user:", err));
-    }
-  }, [username]);
 
   return (
     <Suspense>
@@ -69,8 +57,8 @@ export function StartScreen({
             <span className="p-float-label flex-col">
               <h1 style={{ color: 'white' }}>Welcome to Battle</h1>
               {
-                user &&
-                <h1 style={{ color: 'white' }}>Your Total Coins: ${user.coins}</h1>
+                userProfile &&
+                <h1 style={{ color: 'white' }}>Your Total Coins: ${userProfile.coins}</h1>
               }
               <InputText
                 id="username"

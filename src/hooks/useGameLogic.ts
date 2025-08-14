@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from 'react';
-import { Choice, ServerResult, GamePhase, choiceEmojis, MatchFoundData, RoundResultData, OpponentMadeChoiceData, API_URL_BOT_SCORE, SOCKET_SERVER_URL, SessionData, Reaction, TelegramUser } from '../lib';
+import { Choice, ServerResult, GamePhase, choiceEmojis, MatchFoundData, RoundResultData, OpponentMadeChoiceData, API_URL_BOT_SCORE, SOCKET_SERVER_URL, SessionData, Reaction, TelegramUser, UserProfile } from '../lib';
 import { useSocketConnection } from './useSocketConnection';
 import { useTurnTimer } from './useTurnTimer';
 import { decryptFromUrl, getQueryParam } from '@/lib/decrypt';
@@ -61,6 +61,7 @@ export function useGameLogic() {
   const [username, setUsername] = useState<string>('');
   const [isUsernameFromQuery, setIsUsernameFromQuery] = useState<boolean>(false);
   const [telegramUser, setTelegramUser] = useState<TelegramUser | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [myServerConfirmedUsername, setMyServerConfirmedUsername] = useState<string | null>(null);
   const [opponentUsername, setOpponentUsername] = useState<string | null>(null);
@@ -100,6 +101,19 @@ export function useGameLogic() {
       console.error("Failed to parse user data from URL:", error);
     }
   }, []); // Empty dependency array ensures this runs only once on mount
+
+  useEffect(() => {
+    if (username) {
+      fetch(`${SOCKET_SERVER_URL}/users/${username}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data) {
+            setUserProfile(data);
+          }
+        })
+        .catch(error => console.error('Failed to fetch user profile:', error));
+    }
+  }, [username]);
 
 
   // Centralized game reset logic
@@ -153,13 +167,13 @@ export function useGameLogic() {
   // This effect runs once when the component mounts.
   useEffect(() => {
     // It checks if the game is in the 'loading' phase and if the socket is connected.
-    if (gamePhase === 'loading' && isConnected && telegramUser) {
+    if (gamePhase === 'loading' && isConnected && telegramUser && userProfile) {
       // If both conditions are true, it transitions the game to the 'start' phase.
       setGamePhase('start');
     }
     // The dependency array [gamePhase, isConnected, setGamePhase] ensures this effect
     // re-runs whenever any of these values change.
-  }, [gamePhase, isConnected, telegramUser, setGamePhase]);
+  }, [gamePhase, isConnected, telegramUser, userProfile, setGamePhase]);
 
 
   // Animation Triggers
@@ -550,7 +564,7 @@ export function useGameLogic() {
 
   return {
     // State
-    gamePhase, username, telegramUser, myServerConfirmedUsername, opponentUsername,
+    gamePhase, username, telegramUser, userProfile, myServerConfirmedUsername, opponentUsername,
     myChoiceEmoji, myChoiceAnimate, opponentChoiceEmoji, opponentChoiceAnimate,
     roundResult, roundReason, winStreak, longestStreak, yourScore, opponentScore,
     socketConnectionMessage, userActionMessage, roundStatusMessage,

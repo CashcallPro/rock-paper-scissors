@@ -24,7 +24,7 @@ import { Suspense } from 'react';
 function GamePageContent() {
   const screenHeight = useScreenHeight();
   const {
-    gamePhase, username, myServerConfirmedUsername, opponentUsername,
+    gamePhase, username, userProfile, myServerConfirmedUsername, opponentUsername,
     myChoiceEmoji, myChoiceAnimate, opponentChoiceEmoji, opponentChoiceAnimate,
     roundResult, roundReason, winStreak, longestStreak, yourScore, opponentScore,
     socketConnectionMessage, userActionMessage, roundStatusMessage,
@@ -59,6 +59,7 @@ function GamePageContent() {
             longestStreak={longestStreak}
             isConnected={isConnected}
             isUsernameFromQuery={isUsernameFromQuery}
+            userProfile={userProfile}
           />
         );
       case 'searching':
