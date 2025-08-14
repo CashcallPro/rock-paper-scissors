@@ -70,7 +70,7 @@ export const PlayingScreen = memo(function PlayingScreen({
         userScore={yourScore}
         opponentScore={opponentScore ?? 0}
       />
-      <div className="flex items-center justify-center bg-gray-800 text-white p-2 w-full">
+      <div className="flex items-center justify-center bg-gray-800 text-white p-2 w-full z-10">
         <Image src="/gem.png" alt="gem" width={24} height={24} />
         <span className="ml-2 font-bold">{userProfile?.coins ?? 0}</span>
         {coinChange !== 0 && (
