@@ -259,7 +259,10 @@ export function useGameLogic() {
     setCoinChange(change);
 
     if (userProfile) {
-      setUserProfile({ ...userProfile, coins: userProfile.coins + change });
+      setUserProfile(prevProfile => {
+        if (!prevProfile) return null;
+        return { ...prevProfile, coins: prevProfile.coins + change };
+      });
     }
 
     setHasMadeChoiceThisRound(false);
@@ -436,11 +439,11 @@ export function useGameLogic() {
     stopMyTurnTimer();
   }, [socket, sessionId, hasMadeChoiceThisRound, isConnected, stopMyTurnTimer]);
 
-  const handlePlayerReaction = (reaction: Reaction) => {
-    if (!socket || !sessionId || !isConnected) return
+  const handlePlayerReaction = useCallback((reaction: Reaction) => {
+    if (!socket || !sessionId || !isConnected) return;
 
-    socket.emit('make_reaction', { sessionId, reaction })
-  }
+    socket.emit('make_reaction', { sessionId, reaction });
+  }, [socket, sessionId, isConnected]);
 
   const handleStartGame = useCallback(() => {
     if (!telegramUser) {
