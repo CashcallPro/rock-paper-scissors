@@ -34,7 +34,7 @@ export default function Shop() {
 
   return (
     <div className="bg-gray-800 min-h-screen text-white">
-      <Header user={userProfile} />
+      <Header user={userProfile} variant="back" />
       <main className="p-4">
         <h1 className="text-4xl font-bold text-center mb-8">Shop</h1>
         <div className="flex justify-center gap-8">

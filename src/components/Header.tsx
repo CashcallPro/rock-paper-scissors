@@ -9,29 +9,43 @@ import Link from 'next/link';
 
 interface HeaderProps {
   user: UserProfile | null;
+  variant?: 'default' | 'back';
 }
 
-const Header: React.FC<HeaderProps> = ({ user }) => {
+const Header: React.FC<HeaderProps> = ({ user, variant = 'default' }) => {
   const [isEnergyPopupOpen, setIsEnergyPopupOpen] = useState(false);
   const [isTicketPopupOpen, setIsTicketPopupOpen] = useState(false);
 
   const energyButtonRef = useRef<HTMLButtonElement>(null);
   const ticketButtonRef = useRef<HTMLButtonElement>(null);
+  const router = useRouter();
 
   if (!user) {
     return null; // Don't render the header if there is no user
   }
 
+  const goBack = () => {
+    router.back();
+  };
+
   return (
     <>
       <div className="w-full bg-gray-800 text-white p-2 flex items-center justify-between sticky top-0 z-20">
         <div className="flex items-center">
-          {user.photo_url ? (
-            <img src={user.photo_url} alt={user.username} className="w-10 h-10 rounded-full mr-3" />
+          {variant === 'back' ? (
+            <button onClick={goBack} className="mr-3">
+              <img src="/back-arrow.svg" alt="Back" className="w-6 h-6" />
+            </button>
           ) : (
-            <div className="w-10 h-10 rounded-full bg-gray-500 mr-3"></div>
+            <>
+              {user.photo_url ? (
+                <img src={user.photo_url} alt={user.username} className="w-10 h-10 rounded-full mr-3" />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-gray-500 mr-3"></div>
+              )}
+              <span className="font-bold text-lg">{user.username}</span>
+            </>
           )}
-          <span className="font-bold text-lg">{user.username}</span>
         </div>
         <div className="flex items-center text-lg space-x-4">
           <div className='flex items-center space-x-2'>
