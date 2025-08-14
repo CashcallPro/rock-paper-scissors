@@ -8,7 +8,6 @@ const mockUser: UserProfile = {
   _id: "1",
   username: "Player1",
   tickets: 10,
-  photo_url: "https://via.placeholder.com/150",
   coins: 100,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
@@ -17,9 +16,9 @@ const mockUser: UserProfile = {
 };
 
 const gems = [
-  { icon: "/gem.png", amount: "100 Gems", price: "$0.99" },
-  { icon: "/gem.png", amount: "500 Gems", price: "$4.99" },
-  { icon: "/gem.png", amount: "1200 Gems", price: "$9.99" },
+  { icon: "/shopgem1.png", amount: "100 Gems", price: "$0.99" },
+  { icon: "/shopgem2.png", amount: "500 Gems", price: "$4.99" },
+  { icon: "/shopgem3.png", amount: "1200 Gems", price: "$9.99" },
 ];
 
 const tickets = [

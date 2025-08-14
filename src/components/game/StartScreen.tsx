@@ -36,7 +36,7 @@ export function StartScreen({
   return (
     <Suspense>
       <>
-        <div className="items-start z-10 w-full">
+        <div className="items-start z-10 w-full p-2">
           <HeaderButton
             onClick={() => router.push('/shop')}
             backgroundImage="url('/shop.png')"
