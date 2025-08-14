@@ -14,9 +14,10 @@ const Popup: React.FC<PopupProps> = ({ isOpen, onClose, children, buttonRef }) =
   useEffect(() => {
     if (isOpen && buttonRef.current) {
       const buttonRect = buttonRef.current.getBoundingClientRect();
+      const popupWidth = 300; // Keep this in sync with the width in the style attribute
       setPosition({
         top: buttonRect.bottom + window.scrollY,
-        left: buttonRect.left + window.scrollX,
+        left: buttonRect.left + window.scrollX - popupWidth,
       });
     }
   }, [isOpen, buttonRef]);
