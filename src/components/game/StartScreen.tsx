@@ -15,6 +15,8 @@ interface StartScreenProps {
   userActionMessage: string;
   longestStreak: number;
   isConnected: boolean;
+  isUsernameFromQuery: boolean;
+  userProfile: UserProfile | null;
 }
 
 export function StartScreen({
@@ -25,45 +27,9 @@ export function StartScreen({
   userActionMessage,
   longestStreak,
   isConnected,
+  isUsernameFromQuery,
+  userProfile,
 }: StartScreenProps) {
-
-  const [queryUsername, setQueryusername] = useState<string>()
-  const [user, setUser] = useState<UserProfile>()
-  // const rawLaunchParams = useLaunchParams()
-  // const rawInitData = useRawInitData()
-
-  useEffect(() => {
-
-    // const { initDataRaw, initData } = retrieveLaunchParams();
-
-    // console.log({ initDataRaw })
-    // console.log({ initData })
-
-    // console.log({ query: rawLaunchParams })
-    // console.log({ rawInitData: rawInitData })
-
-    const hash = window.location.hash.slice(1);
-    const params = new URLSearchParams(hash);
-    const tgWebAppData = params.get('tgWebAppData');
-    const webAppParams = new URLSearchParams(tgWebAppData!);
-    const userJsonString = webAppParams.get('user');
-    const userObject = JSON.parse(userJsonString!);
-
-    // const decryptedQuery = decryptFromUrl(query)
-    const queryUsername = userObject.username//getQueryParam(decryptedQuery, 'username')
-
-    if (queryUsername) {
-      setUsername(queryUsername)
-      setQueryusername(queryUsername)
-
-      fetch(`${SOCKET_SERVER_URL}/users/${queryUsername}`)
-        .then(res => res.json())
-        .then(resJson => {
-          setUser(resJson)
-        })
-    }
-
-  }, [])
 
   return (
     <Suspense>
@@ -91,8 +57,8 @@ export function StartScreen({
             <span className="p-float-label flex-col">
               <h1 style={{ color: 'white' }}>Welcome to Battle</h1>
               {
-                user &&
-                <h1 style={{ color: 'white' }}>Your Total Coins: ${user.coins}</h1>
+                userProfile &&
+                <h1 style={{ color: 'white' }}>Your Total Coins: ${userProfile.coins}</h1>
               }
               <InputText
                 id="username"
@@ -105,7 +71,7 @@ export function StartScreen({
                 }}
                 onKeyUp={(e) => e.key === 'Enter' && onStartGame()}
                 placeholder="wait"
-                disabled={!!queryUsername} // Disable if username from query
+                disabled={isUsernameFromQuery} // Disable if username from query
               />
             </span>
           </div>

@@ -2,6 +2,7 @@
 import Head from 'next/head';
 import { useScreenHeight } from '../hooks/useScreenHeight';
 import { useGameLogic } from '../hooks/useGameLogic';
+import { LoadingScreen } from '../components/game/LoadingScreen';
 import { StartScreen } from '../components/game/StartScreen';
 import { SearchingScreen } from '../components/game/SearchingScreen';
 import { OpponentFoundScreen } from '../components/game/OpponentFoundScreen';
@@ -23,7 +24,7 @@ import { Suspense } from 'react';
 function GamePageContent() {
   const screenHeight = useScreenHeight();
   const {
-    gamePhase, username, myServerConfirmedUsername, opponentUsername,
+    gamePhase, username, userProfile, myServerConfirmedUsername, opponentUsername,
     myChoiceEmoji, myChoiceAnimate, opponentChoiceEmoji, opponentChoiceAnimate,
     roundResult, roundReason, winStreak, longestStreak, yourScore, opponentScore,
     socketConnectionMessage, userActionMessage, roundStatusMessage,
@@ -34,6 +35,7 @@ function GamePageContent() {
     gameEndReason,
     finalScores,
     canPlayAgain, // Destructure canPlayAgain
+    isUsernameFromQuery,
     setUsername, handlePlayerChoice,
     handlePlayerReaction, handleStartGame,
     handleEndGame, resetGameToStart, // Added resetGameToStart
@@ -43,7 +45,8 @@ function GamePageContent() {
   const renderGameContent = () => {
 
     switch (gamePhase) {
-
+      case 'loading':
+        return <LoadingScreen connectionMessage={socketConnectionMessage} />;
       case 'start':
         console.log(turnTimerDuration)
         return (
@@ -55,6 +58,8 @@ function GamePageContent() {
             userActionMessage={userActionMessage}
             longestStreak={longestStreak}
             isConnected={isConnected}
+            isUsernameFromQuery={isUsernameFromQuery}
+            userProfile={userProfile}
           />
         );
       case 'searching':
