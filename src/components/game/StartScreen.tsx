@@ -1,10 +1,11 @@
 "use client";
 import { InputText } from 'primereact/inputtext';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense } from 'react';
 import Image from 'next/image';
-import { SOCKET_SERVER_URL, UserProfile } from '@/lib';
-import { retrieveLaunchParams, useLaunchParams, } from '@telegram-apps/sdk-react';
+import { UserProfile } from '@/lib';
 import { BattleButton } from '../BattleButton';
+import { HeaderButton } from '../HeaderButton';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -29,8 +30,8 @@ export function StartScreen({
   longestStreak,
   isConnected,
   isUsernameFromQuery,
-  userProfile,
 }: StartScreenProps) {
+  const router = useRouter();
 
   return (
     <Suspense>
@@ -39,6 +40,12 @@ export function StartScreen({
           className="w-full flex flex-col items-center justify-center h-full text-center px-4"
           style={{ backgroundColor: "transparent" }}
         >
+          <div className="absolute top-4 right-4 z-10">
+            <HeaderButton
+              onClick={() => router.push('/shop')}
+              backgroundImage="url('/shop.png')"
+            />
+          </div>
           <Image
             alt=''
             src="/start-bg.png"
