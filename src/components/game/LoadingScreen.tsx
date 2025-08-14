@@ -1,23 +1,27 @@
 import React from 'react';
 
-// Define the props for the LoadingScreen component
 interface LoadingScreenProps {
   connectionMessage: string;
+  progress: number;
 }
 
-// The LoadingScreen component displays a loading message and a spinner
-export const LoadingScreen: React.FC<LoadingScreenProps> = ({ connectionMessage }) => {
+export const LoadingScreen: React.FC<LoadingScreenProps> = ({ connectionMessage, progress }) => {
   return (
-    <div className="flex flex-col items-center justify-center h-full">
-      {/* Container for the spinner and text */}
-      <div className="text-center">
-        {/* Spinner element */}
-        <div className="w-12 h-12 rounded-full animate-spin
-          border-4 border-solid border-blue-500 border-t-transparent mb-4"></div>
-        {/* Loading text */}
-        <p className="text-lg font-semibold text-gray-700">Loading...</p>
-        {/* Connection status message */}
-        <p className="text-sm text-gray-500">{connectionMessage}</p>
+    <div
+      className="flex flex-col items-center justify-center h-full bg-cover bg-center w-full"
+      style={{
+        backgroundImage: "url('/start-bg.png')", filter: 'brightness(0.5)',
+      }}
+    >
+      <div className="text-center text-white">
+        <p className="text-lg font-semibold mb-4">Loading...</p>
+        <div className="w-64 bg-gray-200 rounded-full h-4 mb-2">
+          <div
+            className="bg-blue-500 h-4 rounded-full"
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+        <p className="text-sm">{connectionMessage}</p>
       </div>
     </div>
   );

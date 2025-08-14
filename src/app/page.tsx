@@ -10,7 +10,7 @@ import { JoiningScreen } from '../components/game/JoiningScreen';
 import { PlayingScreen } from '../components/game/PlayingScreen';
 import { GameEndedScreen } from '../components/game/GameEndedScreen'; // Import GameEndedScreen
 import Image from 'next/image';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Header from '@/components/Header';
 
 // Ensure animate-pop is defined in your global CSS if not using a utility for it
@@ -42,12 +42,29 @@ function GamePageContent() {
     handleEndGame, resetGameToStart, // Added resetGameToStart
   } = useGameLogic();
 
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (gamePhase === 'loading') {
+      const timer = setInterval(() => {
+        setProgress(prevProgress => {
+          if (prevProgress >= 100) {
+            clearInterval(timer);
+            return 100;
+          }
+          return prevProgress + 10;
+        });
+      }, 200);
+
+      return () => clearInterval(timer);
+    }
+  }, [gamePhase]);
 
   const renderGameContent = () => {
 
     switch (gamePhase) {
       case 'loading':
-        return <LoadingScreen connectionMessage={socketConnectionMessage} />;
+        return <LoadingScreen connectionMessage={socketConnectionMessage} progress={progress} />;
       case 'start':
         console.log(turnTimerDuration)
         return (
@@ -123,7 +140,7 @@ function GamePageContent() {
 
       <div className={`w-full flex flex-col items-center ${gamePhase === 'playing' ? 'justify-between' : 'justify-center flex-grow'} z-10`} style={{ height: screenHeight }}>
         {/* Exit Game button can be part of the main layout or conditional */}
-        {gamePhase !== 'start' && ( // Show Exit button only when not in start phase
+        {gamePhase !== 'start' && gamePhase !== 'loading' &&  ( // Show Exit button only when not in start phase
           <div className='w-full flex justify-start p-4 absolute top-0 left-0 z-11'>
             <button
               onClick={handleEndGame}
