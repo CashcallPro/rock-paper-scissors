@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { forwardRef } from 'react';
 
 interface HeaderButtonProps {
   onClick: () => void;
@@ -8,9 +8,10 @@ interface HeaderButtonProps {
   backgroundImage: string,
 }
 
-export function HeaderButton({ onClick, children, backgroundImage }: HeaderButtonProps) {
+export const HeaderButton = forwardRef<HTMLButtonElement, HeaderButtonProps>(({ onClick, children, backgroundImage }, ref) => {
   return (
     <button
+      ref={ref}
       onClick={onClick}
       className={`relative w-[40px] h-[40px] bg-no-repeat bg-center bg-contain text-white font-bold text-sm z-10
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 
@@ -21,4 +22,6 @@ export function HeaderButton({ onClick, children, backgroundImage }: HeaderButto
       {children}
     </button>
   );
-}
+});
+
+HeaderButton.displayName = 'HeaderButton';

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { UserProfile } from '../lib/types';
 import Popup from './Popup';
 import { HeaderButton } from './HeaderButton';
@@ -13,6 +13,9 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ user }) => {
   const [isEnergyPopupOpen, setIsEnergyPopupOpen] = useState(false);
   const [isTicketPopupOpen, setIsTicketPopupOpen] = useState(false);
+
+  const energyButtonRef = useRef<HTMLButtonElement>(null);
+  const ticketButtonRef = useRef<HTMLButtonElement>(null);
 
   if (!user) {
     return null; // Don't render the header if there is no user
@@ -30,13 +33,13 @@ const Header: React.FC<HeaderProps> = ({ user }) => {
           <span className="font-bold text-lg">{user.username}</span>
         </div>
         <div className="flex items-center text-lg space-x-2">
-          <HeaderButton onClick={() => setIsEnergyPopupOpen(true)} backgroundImage="url('/gem.png')" />
+          <HeaderButton ref={energyButtonRef} onClick={() => setIsEnergyPopupOpen(true)} backgroundImage="url('/gem.png')" />
           <span role="img" aria-label="energy">{user.coins ?? 0}</span>
-          <HeaderButton onClick={() => setIsTicketPopupOpen(true)} backgroundImage="url('/ticket.png')" />
+          <HeaderButton ref={ticketButtonRef} onClick={() => setIsTicketPopupOpen(true)} backgroundImage="url('/ticket.png')" />
           <span role="img" aria-label="tickets">{user.tickets ?? 0}</span>
         </div>
       </div>
-      <Popup isOpen={isEnergyPopupOpen} onClose={() => setIsEnergyPopupOpen(false)}>
+      <Popup isOpen={isEnergyPopupOpen} onClose={() => setIsEnergyPopupOpen(false)} buttonRef={energyButtonRef}>
         <div className="text-center">
           <h2 className="text-white text-2xl mb-4">Energy</h2>
           <p className="text-white mb-4">You can convert tickets to energy.</p>
@@ -45,7 +48,7 @@ const Header: React.FC<HeaderProps> = ({ user }) => {
           </button>
         </div>
       </Popup>
-      <Popup isOpen={isTicketPopupOpen} onClose={() => setIsTicketPopupOpen(false)}>
+      <Popup isOpen={isTicketPopupOpen} onClose={() => setIsTicketPopupOpen(false)} buttonRef={ticketButtonRef}>
         <div className="text-center">
           <h2 className="text-white text-2xl mb-4">Tickets</h2>
           <p className="text-white mb-4">You can purchase more tickets.</p>
