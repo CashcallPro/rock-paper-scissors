@@ -7,6 +7,7 @@ import { SOCKET_SERVER_URL } from '@/lib/constants';
 interface UserContextType {
   telegramUser: TelegramUser | null;
   userProfile: UserProfile | null;
+  setUserProfile: (profile: UserProfile | null) => void;
   opponentProfile: UserProfile | null;
   setOpponentProfile: (profile: UserProfile | null) => void;
   username: string;
@@ -75,6 +76,7 @@ export function UserProvider({ children }: UserProviderProps) {
   const value = {
     telegramUser,
     userProfile,
+    setUserProfile,
     opponentProfile,
     setOpponentProfile,
     username,

@@ -36,7 +36,7 @@ interface GameEndedInsufficientFundsData {
 }
 
 export function useGameLogic() {
-  const { telegramUser, userProfile, username, setUsername, isUsernameFromQuery, setOpponentProfile } = useUser();
+  const { telegramUser, userProfile, setUserProfile, username, setUsername, isUsernameFromQuery, setOpponentProfile } = useUser();
   const { socket, isConnected, connectionMessage: socketConnectionMessage, connectSocket } = useSocketConnection(SOCKET_SERVER_URL);
   const {
     isMyTurnTimerActive, turnTimerDuration, turnTimeRemaining, turnTimerProgress,
@@ -49,6 +49,7 @@ export function useGameLogic() {
   const [opponentChoiceEmoji, setOpponentChoiceEmoji] = useState<string>('?');
   const [opponentChoiceAnimate, setOpponentChoiceAnimate] = useState<boolean>(false);
 
+  const [coinChange, setCoinChange] = useState<number>(0);
   const [roundResult, setRoundResult] = useState<ServerResult>('');
   const [roundReason, setRoundReason] = useState<string>('');
   const [winStreak, setWinStreak] = useState<number>(0);
@@ -148,6 +149,13 @@ export function useGameLogic() {
       return () => clearTimeout(timer);
     }
   }, [opponentChoiceAnimate]);
+
+  useEffect(() => {
+    if (coinChange !== 0) {
+      const timer = setTimeout(() => setCoinChange(0), 3000); // Hide after 3 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [coinChange]);
 
   // Socket Event Listeners
   useEffect(() => {
@@ -249,14 +257,22 @@ export function useGameLogic() {
       setYourScore(data.scores.currentPlayer);
       setOpponentScore(data.scores.opponent);
 
+      let change = 0;
       if (data.result === "You won!") {
+        change = 10;
         setWinStreak((prev) => {
           const newStreak = prev + 1;
           if (newStreak > longestStreak) setLongestStreak(newStreak);
           return newStreak;
         });
       } else if (data.result === "You lost!") {
+        change = -5;
         setWinStreak(0);
+      }
+      setCoinChange(change);
+
+      if (userProfile) {
+        setUserProfile({ ...userProfile, coins: userProfile.coins + change });
       }
 
       setHasMadeChoiceThisRound(false);
@@ -384,7 +400,7 @@ export function useGameLogic() {
       socket.off('forfeit_coins', handleForfeitCoins);
       socket.off('game_ended_insufficient_funds', handleGameEndedInsufficientFunds); // Added cleanup
     };
-  }, [socket, hasMadeChoiceThisRound, longestStreak, gamePhase, resetMyTurnTimer, startMyTurnTimer, stopMyTurnTimer, resetGameToStart, yourScore, opponentScore, setOpponentProfile]); // Added yourScore and opponentScore to dependencies for fallback logic
+  }, [socket, hasMadeChoiceThisRound, longestStreak, gamePhase, resetMyTurnTimer, startMyTurnTimer, stopMyTurnTimer, resetGameToStart, yourScore, opponentScore, setOpponentProfile, userProfile, setUserProfile]); // Added yourScore and opponentScore to dependencies for fallback logic
 
   // Game Phase Transitions (no changes here)
   useEffect(() => {
@@ -545,6 +561,7 @@ export function useGameLogic() {
     gameEndReason,
     finalScores,
     canPlayAgain, // Return canPlayAgain
+    coinChange,
     // Actions
     setUsername,
     handlePlayerChoice,

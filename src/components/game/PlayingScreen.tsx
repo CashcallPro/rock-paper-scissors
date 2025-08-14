@@ -33,6 +33,7 @@ interface PlayingScreenProps {
   longestStreak: number;
   yourScore: number;
   opponentScore?: number;
+  coinChange: number;
   isMyTurnTimerActive: boolean;
   turnTimerProgress: number;
   turnTimeRemaining: number;
@@ -56,6 +57,7 @@ export function PlayingScreen({
   myChoiceEmoji, myChoiceAnimate, opponentChoiceEmoji, opponentChoiceAnimate,
   roundResult, roundReason, roundStatusMessage,
   hasMadeChoiceThisRound, isConnected, sessionId, onPlayerChoice, onReactionClick,
+  coinChange,
 }: PlayingScreenProps) {
   const { userProfile, opponentProfile } = useUser();
 
@@ -67,7 +69,19 @@ export function PlayingScreen({
         userScore={yourScore}
         opponentScore={opponentScore ?? 0}
       />
-
+      <div className="flex items-center justify-center bg-gray-800 text-white p-2 w-full">
+        <Image src="/gem.png" alt="gem" width={24} height={24} />
+        <span className="ml-2 font-bold">{userProfile?.coins ?? 0}</span>
+        {coinChange !== 0 && (
+          <span
+            className={`ml-4 font-bold ${
+              coinChange > 0 ? 'text-green-500' : 'text-red-500'
+            } animate-ping`}
+          >
+            {coinChange > 0 ? `+${coinChange}` : coinChange}
+          </span>
+        )}
+      </div>
       {isMyTurnTimerActive && (
         <div className="w-full max-w-md px-4 my-2 z-10">
           <ProgressBar value={turnTimerProgress} showValue={false} style={{ height: '10px' }} />

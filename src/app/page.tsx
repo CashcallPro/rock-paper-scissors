@@ -30,6 +30,7 @@ function GamePageContent() {
     roundResult, roundReason, winStreak, longestStreak, yourScore, opponentScore,
     socketConnectionMessage, userActionMessage, roundStatusMessage,
     hasMadeChoiceThisRound, isConnected, sessionId,
+    coinChange,
     isMyTurnTimerActive, turnTimerDuration, turnTimeRemaining, turnTimerProgress,
     joiningCountdown,
     // New state for game ended phase from useGameLogic
@@ -102,6 +103,7 @@ function GamePageContent() {
             myChoiceAnimate={myChoiceAnimate}
             opponentChoiceEmoji={opponentChoiceEmoji}
             opponentChoiceAnimate={opponentChoiceAnimate}
+            coinChange={coinChange}
             roundResult={roundResult}
             roundReason={roundReason}
             roundStatusMessage={roundStatusMessage}
