@@ -3,28 +3,20 @@
 import Header from "@/components/Header";
 import { GiftItemCard } from "@/components/GiftItemCard";
 import { UserProfile } from "@/lib/types";
-
-const mockUser: UserProfile = {
-  _id: "1",
-  username: "Player1",
-  tickets: 10,
-  coins: 100,
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-  __v: 0,
-  matches: [],
-};
+import { useUser } from "@/context/UserContext";
 
 const gifts = [
   { icon: "/gem.png", name: "Check in daily" },
   { icon: "/ticket.png", name: "Follow twitter" },
-  { icon: "/ticket.png", name: "Play 3 mathces" },
+  { icon: "/gem.png", name: "Play 3 mathces" },
+  { icon: "/ticket.png", name: "Win 10 mathces" },
 ];
 
 export default function Gifts() {
+  const { userProfile } = useUser()
   return (
     <div className="bg-gray-800 min-h-screen text-white">
-      <Header user={mockUser} />
+      <Header user={userProfile} variant="back" />
       <main className="p-4">
         <h1 className="text-4xl font-bold text-center mb-8">Gifts</h1>
         <div className="flex flex-col items-center gap-4">
