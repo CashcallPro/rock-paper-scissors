@@ -88,7 +88,11 @@ export function StartScreen({
           <BattleButton
             onClick={onStartGame}
             disabled={!isConnected} />
-          <p className='text-white z-10'>10 energy per round</p>
+          <div className="flex items-center justify-center text-white z-10">
+            <span>10 +&nbsp;</span>
+            <Image src="/gem.png" alt="gem" width={20} height={20} className="mx-1" />
+            <span>&nbsp;per round</span>
+          </div>
           {(connectionMessage || userActionMessage) && (
             <p className="mt-4 text-sm text-red-500 z-10">
               {userActionMessage || connectionMessage || (!isConnected && "Connecting...")}
