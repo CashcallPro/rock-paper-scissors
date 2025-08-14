@@ -11,6 +11,7 @@ import { PlayingScreen } from '../components/game/PlayingScreen';
 import { GameEndedScreen } from '../components/game/GameEndedScreen'; // Import GameEndedScreen
 import Image from 'next/image';
 import { Suspense } from 'react';
+import Header from '@/components/Header';
 
 // Ensure animate-pop is defined in your global CSS if not using a utility for it
 // styles/globals.css or equivalent:
@@ -142,6 +143,9 @@ function GamePageContent() {
           </div>
         )}
         <div className={`w-full h-full flex flex-col items-center ${gamePhase === 'playing' ? 'justify-between' : 'justify-center'}`}>
+          <Header
+            user={userProfile}
+          />
           {renderGameContent()}
         </div>
       </div>

@@ -56,10 +56,6 @@ export function StartScreen({
           <div className="p-fluid mb-4 w-full max-w-xs">
             <span className="p-float-label flex-col">
               <h1 style={{ color: 'white' }}>Welcome to Battle</h1>
-              {
-                userProfile &&
-                <h1 style={{ color: 'white' }}>Your Total Coins: ${userProfile.coins}</h1>
-              }
               <InputText
                 id="username"
                 value={username}
@@ -90,7 +86,7 @@ export function StartScreen({
               priority // If it's an LCP element
             />
           </button>
-          <p className='text-white z-10'>10$ per round</p>
+          <p className='text-white z-10'>10 energy per round</p>
           {(connectionMessage || userActionMessage) && (
             <p className="mt-4 text-sm text-red-500 z-10">
               {userActionMessage || connectionMessage || (!isConnected && "Connecting...")}
