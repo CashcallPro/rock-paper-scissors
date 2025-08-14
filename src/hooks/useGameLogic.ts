@@ -4,6 +4,7 @@ import { Choice, ServerResult, GamePhase, choiceEmojis, MatchFoundData, RoundRes
 import { useSocketConnection } from './useSocketConnection';
 import { useTurnTimer } from './useTurnTimer';
 import { decryptFromUrl, getQueryParam } from '@/lib/decrypt';
+import { useUser } from '@/context/UserContext';
 
 // Interface for the new socket event
 interface MatchmakingFailedInsufficientCoinsData {
@@ -35,7 +36,7 @@ interface GameEndedInsufficientFundsData {
 }
 
 export function useGameLogic() {
-
+  const { telegramUser, userProfile, username, setUsername, isUsernameFromQuery } = useUser();
   const { socket, isConnected, connectionMessage: socketConnectionMessage, connectSocket } = useSocketConnection(SOCKET_SERVER_URL);
   const {
     isMyTurnTimerActive, turnTimerDuration, turnTimeRemaining, turnTimerProgress,
@@ -58,10 +59,6 @@ export function useGameLogic() {
   // Game flow & multiplayer state
   const [gamePhase, setGamePhase] = useState<GamePhase>('loading');
   const [joiningCountdown, setJoiningCountdown] = useState<number>(2);
-  const [username, setUsername] = useState<string>('');
-  const [isUsernameFromQuery, setIsUsernameFromQuery] = useState<boolean>(false);
-  const [telegramUser, setTelegramUser] = useState<TelegramUser | null>(null);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [myServerConfirmedUsername, setMyServerConfirmedUsername] = useState<string | null>(null);
   const [opponentUsername, setOpponentUsername] = useState<string | null>(null);
@@ -75,45 +72,6 @@ export function useGameLogic() {
   const [gameEndReason, setGameEndReason] = useState<string>('');
   const [finalScores, setFinalScores] = useState<{ playerScore: number; opponentScore: number | undefined }>({ playerScore: 0, opponentScore: undefined });
   const [canPlayAgain, setCanPlayAgain] = useState<boolean>(true); // New state for canPlayAgain
-
-
-  // Effect to parse user data from URL hash on component mount
-  useEffect(() => {
-    try {
-      const hash = window.location.hash.slice(1);
-      if (!hash) return;
-
-      const params = new URLSearchParams(hash);
-      const tgWebAppData = params.get('tgWebAppData');
-      if (!tgWebAppData) return;
-
-      const webAppParams = new URLSearchParams(tgWebAppData);
-      const userJsonString = webAppParams.get('user');
-      if (userJsonString) {
-        const userObject: TelegramUser = JSON.parse(userJsonString);
-        setTelegramUser(userObject);
-        if (userObject.username) {
-          setUsername(userObject.username);
-          setIsUsernameFromQuery(true);
-        }
-      }
-    } catch (error) {
-      console.error("Failed to parse user data from URL:", error);
-    }
-  }, []); // Empty dependency array ensures this runs only once on mount
-
-  useEffect(() => {
-    if (username) {
-      fetch(`${SOCKET_SERVER_URL}/users/${username}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data) {
-            setUserProfile(data);
-          }
-        })
-        .catch(error => console.error('Failed to fetch user profile:', error));
-    }
-  }, [username]);
 
 
   // Centralized game reset logic

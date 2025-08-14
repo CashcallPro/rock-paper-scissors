@@ -4,6 +4,7 @@ import Script from "next/script";
 import {  } from "@telegram-apps/sdk-react";
 import { Lilita_One } from 'next/font/google'
 import AnalyticsProvider from "@/components/AnalyticsProvider";
+import { UserProvider } from "@/context/UserContext";
 
 const lilita = Lilita_One({
   subsets: ['latin'],
@@ -24,7 +25,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${lilita.className} antialiased`}>
         <AnalyticsProvider>
-          {children}
+          <UserProvider>
+            {children}
+          </UserProvider>
         </AnalyticsProvider>
         <Script
           src="https://telegram.org/js/telegram-web-app.js"
