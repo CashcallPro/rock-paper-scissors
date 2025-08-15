@@ -1,7 +1,9 @@
 "use client";
 import Head from 'next/head';
 import { useScreenHeight } from '../hooks/useScreenHeight';
-import { useGameLogic } from '../hooks/useGameLogic';
+import { useGame } from '../context/GameContext';
+import ShopScreen from '../components/shop/ShopScreen';
+import GiftsScreen from '../components/gifts/GiftsScreen';
 import { LoadingScreen } from '../components/game/LoadingScreen';
 import { StartScreen } from '../components/game/StartScreen';
 import { SearchingScreen } from '../components/game/SearchingScreen';
@@ -41,7 +43,11 @@ function GamePageContent() {
     setUsername, handlePlayerChoice,
     handlePlayerReaction, handleStartGame,
     handleEndGame, resetGameToStart, // Added resetGameToStart
-  } = useGameLogic();
+    overlay,
+    closeOverlay,
+    openShopOverlay,
+    openGiftsOverlay,
+  } = useGame();
 
   const [progress, setProgress] = useState(0);
 
@@ -79,6 +85,8 @@ function GamePageContent() {
             isConnected={isConnected}
             isUsernameFromQuery={isUsernameFromQuery}
             userProfile={userProfile}
+            onOpenShop={openShopOverlay}
+            onOpenGifts={openGiftsOverlay}
           />
         );
       case 'searching':
@@ -130,7 +138,7 @@ function GamePageContent() {
   };
 
   return (
-    <div className="w-screen overflow-hidden flex flex-col items-center bg-gray-100" style={{ height: screenHeight }}>
+    <div className="relative w-screen overflow-hidden flex flex-col items-center bg-gray-100" style={{ height: screenHeight }}>
       <Head>
         <title>
           {gamePhase === 'playing' && myServerConfirmedUsername && opponentUsername
@@ -161,10 +169,21 @@ function GamePageContent() {
             </button>
           </div>
         )}
-        <div className={`w-full h-full flex flex-col items-center ${gamePhase === 'playing' ? 'justify-between' : 'justify-center'}`}>          
+        <div className={`w-full h-full flex flex-col items-center ${gamePhase === 'playing' ? 'justify-between' : 'justify-center'}`}>
           {renderGameContent()}
         </div>
       </div>
+
+      {overlay === 'shop' && (
+        <div className="absolute inset-0 z-30">
+          <ShopScreen onBack={closeOverlay} />
+        </div>
+      )}
+      {overlay === 'gifts' && (
+        <div className="absolute inset-0 z-30">
+          <GiftsScreen onBack={closeOverlay} />
+        </div>
+      )}
     </div>
   );
 }

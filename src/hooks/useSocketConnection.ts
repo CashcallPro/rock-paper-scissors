@@ -9,6 +9,7 @@ export function useSocketConnection(serverUrl: string) {
 
   useEffect(() => {
     const newSocket = io(serverUrl, {
+      autoConnect: false, // Don't connect automatically
       reconnectionAttempts: 5,
       reconnectionDelay: 3000,
     });
@@ -31,7 +32,8 @@ export function useSocketConnection(serverUrl: string) {
       setConnectionMessage(`Disconnected: ${reason}.`);
       console.log('Socket disconnected:', reason);
       if (reason === 'io server disconnect') {
-        newSocket.connect(); // Attempt to reconnect if server initiated disconnect
+        // The server disconnected us, maybe we should try to reconnect.
+        // For now, we'll let the user decide when to reconnect.
       }
     });
 
@@ -39,17 +41,25 @@ export function useSocketConnection(serverUrl: string) {
       newSocket.off('connect');
       newSocket.off('connect_error');
       newSocket.off('disconnect');
-      newSocket.disconnect();
+      if (newSocket.connected) {
+        newSocket.disconnect();
+      }
       setSocket(null);
       setIsConnected(false);
     };
   }, [serverUrl]);
 
-  const connect = () => {
-     if (socket && !socket.connected) {
-         socket.connect();
-     }
+  const connectSocket = () => {
+    if (socket && !socket.connected) {
+      socket.connect();
+    }
   };
 
-  return { socket, isConnected, connectionMessage, connectSocket: connect };
+  const disconnectSocket = () => {
+    if (socket && socket.connected) {
+      socket.disconnect();
+    }
+  };
+
+  return { socket, isConnected, connectionMessage, connectSocket, disconnectSocket };
 }

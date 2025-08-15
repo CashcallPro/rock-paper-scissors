@@ -65,6 +65,7 @@ export function useGameLogic() {
   const [opponentUsername, setOpponentUsername] = useState<string | null>(null);
 
   // UI messages and controls
+  const [overlay, setOverlay] = useState<'shop' | 'gifts' | null>(null);
   const [userActionMessage, setUserActionMessage] = useState<string>('');
   const [roundStatusMessage, setRoundStatusMessage] = useState<string>('');
   const [hasMadeChoiceThisRound, setHasMadeChoiceThisRound] = useState<boolean>(false);
@@ -496,6 +497,18 @@ export function useGameLogic() {
   }, [gamePhase, socket, isConnected]);
 
 
+  const openShopOverlay = useCallback(() => {
+    setOverlay('shop');
+  }, []);
+
+  const openGiftsOverlay = useCallback(() => {
+    setOverlay('gifts');
+  }, []);
+
+  const closeOverlay = useCallback(() => {
+    setOverlay(null);
+  }, []);
+
   const handleEndGame = useCallback(async () => {
     if (socket && sessionId && isConnected) {
       socket.emit('end_game', { sessionId });
@@ -562,5 +575,9 @@ export function useGameLogic() {
     handleEndGame,
     handleCancelSearch, // Exposed if you want a direct cancel button
     resetGameToStart,   // Exposed if you want to call it directly for "go back"
+    overlay,
+    openShopOverlay,
+    openGiftsOverlay,
+    closeOverlay,
   };
 }

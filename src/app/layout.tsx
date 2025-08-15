@@ -4,6 +4,7 @@ import Script from "next/script";
 import {  } from "@telegram-apps/sdk-react";
 import { Lilita_One } from 'next/font/google'
 import AnalyticsProvider from "@/components/AnalyticsProvider";
+import { GameProvider } from "@/context/GameContext";
 import { UserProvider } from "@/context/UserContext";
 
 const lilita = Lilita_One({
@@ -26,7 +27,9 @@ export default function RootLayout({
       <body className={`${lilita.className} antialiased`}>
         <AnalyticsProvider>
           <UserProvider>
-            {children}
+            <GameProvider>
+              {children}
+            </GameProvider>
           </UserProvider>
         </AnalyticsProvider>
         <Script
