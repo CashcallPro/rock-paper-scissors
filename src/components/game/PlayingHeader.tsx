@@ -9,10 +9,12 @@ interface PlayingHeaderProps {
   opponent: UserProfile | null;
   userScore: number;
   opponentScore: number;
+  userCoins: number;
+  coinChange: number;
 }
 
-const PlayingHeader: React.FC<PlayingHeaderProps> = ({ user, opponent, userScore, opponentScore }) => {
-  const renderUserProfile = (profile: UserProfile | null, score: number, isOpponent: boolean = false) => {
+const PlayingHeader: React.FC<PlayingHeaderProps> = ({ user, opponent, userScore, opponentScore, userCoins, coinChange }) => {
+  const renderUserProfile = (profile: UserProfile | null, isOpponent: boolean = false) => {
     if (!profile) {
       return (
         <div className={`flex items-center ${isOpponent ? 'flex-row-reverse' : ''}`}>
@@ -33,20 +35,37 @@ const PlayingHeader: React.FC<PlayingHeaderProps> = ({ user, opponent, userScore
             <Image src="/armor.png" alt={profile.username} width={32} height={32} />
           </div>
         )}
-        <span className="font-bold text-lg">{profile.username}</span>
+        <div className={`flex flex-col ${isOpponent ? 'items-end' : 'items-start'}`}>
+          <span className="font-bold text-lg">{profile.username}</span>
+          {!isOpponent && (
+            <div className="flex items-center">
+              <Image src="/gem.png" alt="gem" width={16} height={16} />
+              <span className="ml-1 font-bold text-sm">{userCoins}</span>
+              {coinChange !== 0 && (
+                <span
+                  className={`ml-2 font-bold text-sm ${
+                    coinChange > 0 ? 'text-green-500' : 'text-red-500'
+                  } animate-ping`}
+                >
+                  {coinChange > 0 ? `+${coinChange}` : coinChange}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     );
   };
 
   return (
     <div className="w-full bg-gray-800 text-white p-2 flex items-center justify-between sticky top-0 z-20">
-      {renderUserProfile(user, userScore)}
+      {renderUserProfile(user)}
       <div className="flex items-center text-lg font-bold">
         <span>{userScore}</span>
         <span className="mx-2">-</span>
         <span>{opponentScore}</span>
       </div>
-      {renderUserProfile(opponent, opponentScore, true)}
+      {renderUserProfile(opponent, true)}
     </div>
   );
 };
