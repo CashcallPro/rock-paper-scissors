@@ -21,8 +21,8 @@ interface StartScreenProps {
   isConnected: boolean;
   isUsernameFromQuery: boolean;
   userProfile: UserProfile | null;
-  onGoToShop: () => void;
-  onGoToGifts: () => void;
+  onOpenShop: () => void;
+  onOpenGifts: () => void;
 }
 
 export function StartScreen({
@@ -35,8 +35,8 @@ export function StartScreen({
   isConnected,
   isUsernameFromQuery,
   userProfile,
-  onGoToShop,
-  onGoToGifts,
+  onOpenShop,
+  onOpenGifts,
 }: StartScreenProps) {
   const router = useRouter();
 
@@ -47,8 +47,8 @@ export function StartScreen({
           user={userProfile}
         />
         <div className="flex items-start z-10 w-full p-2 justify-between">
-          <HeaderButton onClick={onGoToShop} backgroundImage="url('/shop.png')" />
-          <HeaderButton onClick={onGoToGifts} backgroundImage="url('/gift.png')" />
+          <HeaderButton onClick={onOpenShop} backgroundImage="url('/shop.png')" />
+          <HeaderButton onClick={onOpenGifts} backgroundImage="url('/gift.png')" />
         </div>
         <div
           className="w-full flex flex-col items-center justify-center h-full text-center px-4"

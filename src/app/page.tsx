@@ -2,6 +2,8 @@
 import Head from 'next/head';
 import { useScreenHeight } from '../hooks/useScreenHeight';
 import { useGame } from '../context/GameContext';
+import ShopScreen from '../components/shop/ShopScreen';
+import GiftsScreen from '../components/gifts/GiftsScreen';
 import { LoadingScreen } from '../components/game/LoadingScreen';
 import { StartScreen } from '../components/game/StartScreen';
 import { SearchingScreen } from '../components/game/SearchingScreen';
@@ -9,8 +11,6 @@ import { OpponentFoundScreen } from '../components/game/OpponentFoundScreen';
 import { JoiningScreen } from '../components/game/JoiningScreen';
 import { PlayingScreen } from '../components/game/PlayingScreen';
 import { GameEndedScreen } from '../components/game/GameEndedScreen'; // Import GameEndedScreen
-import ShopScreen from '../components/shop/ShopScreen';
-import GiftsScreen from '../components/gifts/GiftsScreen';
 import Image from 'next/image';
 import { Suspense, useEffect, useState } from 'react';
 import Header from '@/components/Header';
@@ -43,9 +43,10 @@ function GamePageContent() {
     setUsername, handlePlayerChoice,
     handlePlayerReaction, handleStartGame,
     handleEndGame, resetGameToStart, // Added resetGameToStart
-    handleGoBackToStart,
-    handleGoToShop,
-    handleGoToGifts,
+    overlay,
+    closeOverlay,
+    openShopOverlay,
+    openGiftsOverlay,
   } = useGame();
 
   const [progress, setProgress] = useState(0);
@@ -84,8 +85,8 @@ function GamePageContent() {
             isConnected={isConnected}
             isUsernameFromQuery={isUsernameFromQuery}
             userProfile={userProfile}
-            onGoToShop={handleGoToShop}
-            onGoToGifts={handleGoToGifts}
+            onOpenShop={openShopOverlay}
+            onOpenGifts={openGiftsOverlay}
           />
         );
       case 'searching':
@@ -131,17 +132,13 @@ function GamePageContent() {
             canPlayAgain={canPlayAgain} // Pass canPlayAgain
           />
         );
-      case 'shop':
-        return <ShopScreen onBack={handleGoBackToStart} />;
-      case 'gifts':
-        return <GiftsScreen onBack={handleGoBackToStart} />;
       default:
         return null;
     }
   };
 
   return (
-    <div className="w-screen overflow-hidden flex flex-col items-center bg-gray-100" style={{ height: screenHeight }}>
+    <div className="relative w-screen overflow-hidden flex flex-col items-center bg-gray-100" style={{ height: screenHeight }}>
       <Head>
         <title>
           {gamePhase === 'playing' && myServerConfirmedUsername && opponentUsername
@@ -172,10 +169,21 @@ function GamePageContent() {
             </button>
           </div>
         )}
-        <div className={`w-full h-full flex flex-col items-center ${gamePhase === 'playing' ? 'justify-between' : 'justify-center'}`}>          
+        <div className={`w-full h-full flex flex-col items-center ${gamePhase === 'playing' ? 'justify-between' : 'justify-center'}`}>
           {renderGameContent()}
         </div>
       </div>
+
+      {overlay === 'shop' && (
+        <div className="absolute inset-0 z-30">
+          <ShopScreen onBack={closeOverlay} />
+        </div>
+      )}
+      {overlay === 'gifts' && (
+        <div className="absolute inset-0 z-30">
+          <GiftsScreen onBack={closeOverlay} />
+        </div>
+      )}
     </div>
   );
 }
