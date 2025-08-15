@@ -152,7 +152,7 @@ export function useGameLogic() {
 
   useEffect(() => {
     if (coinChange !== 0) {
-      const timer = setTimeout(() => setCoinChange(0), 3000); // Hide after 3 seconds
+      const timer = setTimeout(() => setCoinChange(0), 1000); // Hide after 3 seconds
       return () => clearTimeout(timer);
     }
   }, [coinChange]);
@@ -245,15 +245,15 @@ export function useGameLogic() {
     setOpponentScore(data.scores.opponent);
 
     let change = 0;
-    if (data.result === "You won!") {
-      change = 10;
+    if (data.result.includes("won")) {
+      change = 8;
       setWinStreak((prev) => {
         const newStreak = prev + 1;
         if (newStreak > longestStreak) setLongestStreak(newStreak);
         return newStreak;
       });
-    } else if (data.result === "You lost!") {
-      change = -5;
+    } else if (data.result.includes("lost")) {
+      change = -10;
       setWinStreak(0);
     }
     setCoinChange(change);
