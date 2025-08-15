@@ -27,7 +27,7 @@ const PlayingHeader: React.FC<PlayingHeaderProps> = ({ user, opponent, userScore
     }
 
     return (
-      <div className={`flex items-center ${isOpponent ? 'flex-row-reverse' : ''}`}>
+      <div className={`flex-1 flex items-center ${isOpponent ? 'flex-row-reverse' : ''}`}>
         {profile.photo_url ? (
           <Image src={profile.photo_url} alt={profile.username} width={40} height={40} className="w-10 h-10 rounded-full m-2" />
         ) : (
