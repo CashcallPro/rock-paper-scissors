@@ -36,7 +36,7 @@ interface GameEndedInsufficientFundsData {
 }
 
 export function useGameLogic() {
-  const { telegramUser, userProfile, username, setUsername, isUsernameFromQuery } = useUser();
+  const { telegramUser, userProfile, setUserProfile, username, setUsername, isUsernameFromQuery, setOpponentProfile } = useUser();
   const { socket, isConnected, connectionMessage: socketConnectionMessage, connectSocket } = useSocketConnection(SOCKET_SERVER_URL);
   const {
     isMyTurnTimerActive, turnTimerDuration, turnTimeRemaining, turnTimerProgress,
@@ -49,6 +49,7 @@ export function useGameLogic() {
   const [opponentChoiceEmoji, setOpponentChoiceEmoji] = useState<string>('?');
   const [opponentChoiceAnimate, setOpponentChoiceAnimate] = useState<boolean>(false);
 
+  const [coinChange, setCoinChange] = useState<number>(0);
   const [roundResult, setRoundResult] = useState<ServerResult>('');
   const [roundReason, setRoundReason] = useState<string>('');
   const [winStreak, setWinStreak] = useState<number>(0);
@@ -149,198 +150,210 @@ export function useGameLogic() {
     }
   }, [opponentChoiceAnimate]);
 
+  useEffect(() => {
+    if (coinChange !== 0) {
+      const timer = setTimeout(() => setCoinChange(0), 1000); // Hide after 3 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [coinChange]);
+
+  const handleMatchFound = useCallback((data: MatchFoundData) => {
+    console.log('Match found:', data);
+    setSessionId(data.sessionId);
+    setOpponentUsername(data.opponent);
+    setMyServerConfirmedUsername(data.yourUsername);
+    setGamePhase('opponentFound');
+    setWinStreak(0);
+    setLongestStreak(0);
+    setYourScore(0);
+    setOpponentScore(0);
+    setRoundStatusMessage('');
+    setUserActionMessage('');
+    setHasMadeChoiceThisRound(false);
+    resetMyTurnTimer();
+
+    if (data.opponent) {
+      fetch(`${SOCKET_SERVER_URL}/users/${data.opponent}`)
+        .then(res => res.json())
+        .then(profile => {
+          if (profile) {
+            setOpponentProfile(profile);
+          }
+        })
+        .catch(error => console.error('Failed to fetch opponent profile:', error));
+    }
+  }, [setOpponentProfile, resetMyTurnTimer]);
+
+  const handleWaiting = useCallback((data: { message: string }) => {
+    setRoundStatusMessage(data.message);
+  }, []);
+
+  const handleAlreadyInQueue = useCallback((data: { message: string }) => {
+    resetGameToStart(data.message);
+  }, [resetGameToStart]);
+
+  const handleAlreadyInSession = useCallback((data: { message: string }) => {
+    console.log('Already in session event:', data);
+    resetGameToStart(data.message);
+  }, [resetGameToStart]);
+
+  const handleMatchmakingCancelled = useCallback((data: { message: string }) => {
+    console.log('Matchmaking cancelled by server:', data.message);
+    if (gamePhase !== 'start') {
+      setGamePhase('start');
+    }
+    setUserActionMessage(data.message || 'Matchmaking cancelled.');
+    setRoundStatusMessage('');
+  }, [gamePhase]);
+
+  const handleNotInQueue = useCallback((data: { message: string }) => {
+    console.log('Not in queue (or already matched) according to server:', data.message);
+    setUserActionMessage(data.message);
+  }, []);
+
+  const handleCannotCancelInGame = useCallback((data: { message: string }) => {
+    console.warn('Attempted to cancel matchmaking while in game:', data.message);
+    setUserActionMessage(data.message);
+  }, []);
+
+  const handleChoiceRegistered = useCallback((data: { message: string }) => {
+    console.log(data.message);
+    setRoundStatusMessage(data.message || 'Choice registered. Waiting for opponent.');
+  }, []);
+
+  const handleOpponentMadeChoice = useCallback((data: OpponentMadeChoiceData) => {
+    console.log('Opponent made choice:', data);
+    setRoundStatusMessage(data.message);
+
+    if (socket && data.timerDetails && data.timerDetails.activeFor === socket.id && !hasMadeChoiceThisRound) {
+      startMyTurnTimer(data.timerDetails.duration);
+    } else if (hasMadeChoiceThisRound) {
+      setRoundStatusMessage('Opponent has chosen. Revealing results...');
+      stopMyTurnTimer();
+    }
+  }, [socket, hasMadeChoiceThisRound, startMyTurnTimer, stopMyTurnTimer]);
+
+  const handleRoundResult = useCallback((data: RoundResultData) => {
+    console.log('Round Result:', data);
+    setMyChoiceEmoji(data.yourChoice ? choiceEmojis[data.yourChoice] : '⏳');
+    setMyChoiceAnimate(true);
+    setOpponentChoiceEmoji(data.opponentChoice ? choiceEmojis[data.opponentChoice] : '⏳');
+    setOpponentChoiceAnimate(true);
+    setRoundResult(data.result);
+    setRoundReason(data.reason || '');
+    setYourScore(data.scores.currentPlayer);
+    setOpponentScore(data.scores.opponent);
+
+    let change = 0;
+    if (data.result.includes("won")) {
+      change = 8;
+      setWinStreak((prev) => {
+        const newStreak = prev + 1;
+        if (newStreak > longestStreak) setLongestStreak(newStreak);
+        return newStreak;
+      });
+    } else if (data.result.includes("lost")) {
+      change = -10;
+      setWinStreak(0);
+    }
+    setCoinChange(change);
+
+    if (userProfile) {
+      setUserProfile(prevProfile => {
+        if (!prevProfile) return null;
+        return { ...prevProfile, coins: prevProfile.coins + change };
+      });
+    }
+
+    setHasMadeChoiceThisRound(false);
+    setRoundStatusMessage(data.reason || 'Choose your next move!');
+    stopMyTurnTimer();
+  }, [longestStreak, userProfile, setUserProfile, stopMyTurnTimer]);
+
+  const handleOpponentDisconnected = useCallback((data: { message: string }) => {
+    console.log('Opponent disconnected:', data);
+    setGamePhase('gameEnded');
+    setGameEndReason(data.message || "Opponent disconnected. The game has ended.");
+    setFinalScores({ playerScore: yourScore, opponentScore: opponentScore });
+    stopMyTurnTimer();
+    resetMyTurnTimer();
+  }, [yourScore, opponentScore, stopMyTurnTimer, resetMyTurnTimer]);
+
+  const handleGameEndedByServer = useCallback((data: { message: string; initiator?: string }) => {
+    console.log('Game ended by server/opponent:', data);
+    const endMessage = data.initiator ? `${data.initiator} ended the game.` : (data.message || "The game has ended.");
+    setGamePhase('gameEnded');
+    setGameEndReason(endMessage);
+    setFinalScores({ playerScore: yourScore, opponentScore: opponentScore });
+    stopMyTurnTimer();
+    resetMyTurnTimer();
+  }, [yourScore, opponentScore, stopMyTurnTimer, resetMyTurnTimer]);
+
+  const handleErrorOccurred = useCallback((data: { message: string }) => {
+    setUserActionMessage(`Error: ${data.message}`);
+    console.error('Error from server:', data.message);
+    stopMyTurnTimer();
+  }, [stopMyTurnTimer]);
+
+  const handleMatchmakingFailedInsufficientCoins = useCallback((data: MatchmakingFailedInsufficientCoinsData) => {
+    console.log('Matchmaking failed due to insufficient coins:', data);
+    resetGameToStart(data.message);
+  }, [resetGameToStart]);
+
+  const handleMatchmakingFailedSystemError = useCallback((data: MatchmakingFailedSystemErrorData) => {
+    console.log('Matchmaking failed due to system error:', data);
+    resetGameToStart(data.message);
+  }, [resetGameToStart]);
+
+  const handleOpponentForfeitCoins = useCallback((data: OpponentForfeitCoinsData) => {
+    console.log('Opponent forfeit coins:', data);
+    setRoundStatusMessage(data.message);
+  }, []);
+
+  const handleForfeitCoins = useCallback((data: ForfeitCoinsData) => {
+    console.log('Player forfeit coins:', data);
+    setRoundStatusMessage(data.message);
+  }, []);
+
+  const handleGameEndedInsufficientFunds = useCallback((data: GameEndedInsufficientFundsData) => {
+    console.log('Game ended due to insufficient funds:', data);
+    setGamePhase('gameEnded');
+    setGameEndReason(data.message);
+
+    const myPlayerId = socket?.id;
+    let myFinalScore = 0;
+    let opponentFinalScore: number | undefined = undefined;
+
+    if (myPlayerId && data.session.scores) {
+      myFinalScore = data.session.scores[myPlayerId] ?? 0;
+      const opponentPlayer = data.session.players.find(p => p.socketId !== myPlayerId);
+      if (opponentPlayer && data.session.scores[opponentPlayer.socketId] !== undefined) {
+        opponentFinalScore = data.session.scores[opponentPlayer.socketId];
+      } else if (opponentPlayer) {
+        opponentFinalScore = opponentScore;
+      }
+    } else {
+      myFinalScore = yourScore;
+      opponentFinalScore = opponentScore;
+    }
+
+    setFinalScores({ playerScore: myFinalScore, opponentScore: opponentFinalScore });
+    setCanPlayAgain(data.canContinue);
+    stopMyTurnTimer();
+    resetMyTurnTimer();
+  }, [socket, yourScore, opponentScore, stopMyTurnTimer, resetMyTurnTimer]);
+
   // Socket Event Listeners
   useEffect(() => {
     if (!socket) return;
-
-    const handleMatchFound = (data: MatchFoundData) => {
-      console.log('Match found:', data);
-      setSessionId(data.sessionId);
-      setOpponentUsername(data.opponent);
-      setMyServerConfirmedUsername(data.yourUsername);
-      setGamePhase('opponentFound');
-      setWinStreak(0);
-      setLongestStreak(0);
-      setYourScore(0);
-      setOpponentScore(0);
-      setRoundStatusMessage('');
-      setUserActionMessage('');
-      setHasMadeChoiceThisRound(false);
-      resetMyTurnTimer();
-    };
-
-    const handleWaiting = (data: { message: string }) => {
-      setRoundStatusMessage(data.message);
-    };
-
-    const handleAlreadyInQueue = (data: { message: string }) => {
-      resetGameToStart(data.message);
-    };
-
-    const handleAlreadyInSession = (data: { message: string }) => {
-      console.log('Already in session event:', data);
-      resetGameToStart(data.message);
-    };
-
-    const handleMatchmakingCancelled = (data: { message: string }) => {
-      console.log('Matchmaking cancelled by server:', data.message);
-      // The resetGameToStart function (if called by user action) would have already
-      // set the gamePhase to 'start'. This event confirms it from server.
-      // We might just want to show the message.
-      // If resetGameToStart wasn't called (e.g. server cancelled for other reason)
-      // then we should ensure phase is 'start'.
-      if (gamePhase !== 'start') {
-        setGamePhase('start'); // Ensure we are at start phase
-      }
-      setUserActionMessage(data.message || 'Matchmaking cancelled.');
-      setRoundStatusMessage(''); // Clear searching message
-    };
-
-    const handleNotInQueue = (data: { message: string }) => {
-      console.log('Not in queue (or already matched) according to server:', data.message);
-      // This might happen if client thought it was searching but server disagrees.
-      // Generally, resetGameToStart would handle the client state.
-      // This message can be displayed.
-      setUserActionMessage(data.message);
-    };
-
-    const handleCannotCancelInGame = (data: { message: string }) => {
-      console.warn('Attempted to cancel matchmaking while in game:', data.message);
-      setUserActionMessage(data.message); // Inform user
-      // No phase change needed, user is still in game.
-    };
-
-    const handleChoiceRegistered = (data: { message: string }) => {
-      console.log(data.message);
-      setRoundStatusMessage(data.message || 'Choice registered. Waiting for opponent.');
-    };
-
-    const handleOpponentMadeChoice = (data: OpponentMadeChoiceData) => {
-      console.log('Opponent made choice:', data);
-      setRoundStatusMessage(data.message);
-
-      if (data.timerDetails && data.timerDetails.activeFor === socket.id && !hasMadeChoiceThisRound) {
-        startMyTurnTimer(data.timerDetails.duration);
-      } else if (hasMadeChoiceThisRound) {
-        setRoundStatusMessage('Opponent has chosen. Revealing results...');
-        stopMyTurnTimer();
-      }
-    };
-
-    const handleRoundResult = (data: RoundResultData) => {
-      console.log('Round Result:', data);
-      setMyChoiceEmoji(data.yourChoice ? choiceEmojis[data.yourChoice] : '⏳');
-      setMyChoiceAnimate(true);
-      setOpponentChoiceEmoji(data.opponentChoice ? choiceEmojis[data.opponentChoice] : '⏳');
-      setOpponentChoiceAnimate(true);
-      setRoundResult(data.result);
-      setRoundReason(data.reason || '');
-      setYourScore(data.scores.currentPlayer);
-      setOpponentScore(data.scores.opponent);
-
-      if (data.result === "You won!") {
-        setWinStreak((prev) => {
-          const newStreak = prev + 1;
-          if (newStreak > longestStreak) setLongestStreak(newStreak);
-          return newStreak;
-        });
-      } else if (data.result === "You lost!") {
-        setWinStreak(0);
-      }
-
-      setHasMadeChoiceThisRound(false);
-      setRoundStatusMessage(data.reason || 'Choose your next move!');
-      stopMyTurnTimer();
-    };
-
-    const handleOpponentDisconnected = (data: { message: string }) => {
-      console.log('Opponent disconnected:', data);
-      setGamePhase('gameEnded');
-      setGameEndReason(data.message || "Opponent disconnected. The game has ended.");
-      setFinalScores({ playerScore: yourScore, opponentScore: opponentScore });
-      stopMyTurnTimer();
-      resetMyTurnTimer();
-      // No call to resetGameToStart here, stays in gameEnded phase
-    };
-
-    const handleGameEndedByServer = (data: { message: string; initiator?: string }) => {
-      console.log('Game ended by server/opponent:', data);
-      const endMessage = data.initiator ? `${data.initiator} ended the game.` : (data.message || "The game has ended.");
-      setGamePhase('gameEnded');
-      setGameEndReason(endMessage);
-      setFinalScores({ playerScore: yourScore, opponentScore: opponentScore });
-      stopMyTurnTimer();
-      resetMyTurnTimer();
-      // No call to resetGameToStart here, stays in gameEnded phase
-    };
-
-    const handleErrorOccurred = (data: { message: string }) => {
-      setUserActionMessage(`Error: ${data.message}`);
-      console.error('Error from server:', data.message);
-      stopMyTurnTimer();
-    };
-
-    const handleMatchmakingFailedInsufficientCoins = (data: MatchmakingFailedInsufficientCoinsData) => {
-      console.log('Matchmaking failed due to insufficient coins:', data);
-      resetGameToStart(data.message);
-    };
-
-    const handleMatchmakingFailedSystemError = (data: MatchmakingFailedSystemErrorData) => {
-      console.log('Matchmaking failed due to system error:', data);
-      resetGameToStart(data.message);
-    };
-
-    const handleOpponentForfeitCoins = (data: OpponentForfeitCoinsData) => {
-      console.log('Opponent forfeit coins:', data);
-      setRoundStatusMessage(data.message);
-      // Do not change gamePhase or reset game here
-    };
-
-    const handleForfeitCoins = (data: ForfeitCoinsData) => {
-      console.log('Player forfeit coins:', data);
-      setRoundStatusMessage(data.message);
-      // Do not change gamePhase or reset game here
-    };
-
-    const handleGameEndedInsufficientFunds = (data: GameEndedInsufficientFundsData) => {
-      console.log('Game ended due to insufficient funds:', data);
-      setGamePhase('gameEnded');
-      setGameEndReason(data.message);
-
-      const myPlayerId = socket?.id;
-      let myFinalScore = 0;
-      let opponentFinalScore: number | undefined = undefined;
-
-      if (myPlayerId && data.session.scores) {
-        myFinalScore = data.session.scores[myPlayerId] ?? 0;
-        const opponentPlayer = data.session.players.find(p => p.socketId !== myPlayerId);
-        if (opponentPlayer && data.session.scores[opponentPlayer.socketId] !== undefined) {
-          opponentFinalScore = data.session.scores[opponentPlayer.socketId];
-        } else if (opponentPlayer) {
-          // If opponent score is not in session.scores, try to get it from the general opponentScore state
-          // This case might be unlikely if session.scores is comprehensive
-          opponentFinalScore = opponentScore;
-        }
-      } else {
-        // Fallback if socket.id is not available or scores are not in session
-        // This uses the hook's current scores as a less precise fallback
-        myFinalScore = yourScore;
-        opponentFinalScore = opponentScore;
-      }
-
-      setFinalScores({ playerScore: myFinalScore, opponentScore: opponentFinalScore });
-      setCanPlayAgain(data.canContinue); // Set canPlayAgain from event data
-      stopMyTurnTimer();
-      resetMyTurnTimer();
-    };
 
     socket.on('match_found', handleMatchFound);
     socket.on('waiting_for_opponent', handleWaiting);
     socket.on('already_in_queue', handleAlreadyInQueue);
     socket.on('already_in_session', handleAlreadyInSession);
-    socket.on('matchmaking_cancelled', handleMatchmakingCancelled); // Added
-    socket.on('not_in_queue', handleNotInQueue);                 // Added
-    socket.on('cannot_cancel_in_game', handleCannotCancelInGame); // Added
+    socket.on('matchmaking_cancelled', handleMatchmakingCancelled);
+    socket.on('not_in_queue', handleNotInQueue);
+    socket.on('cannot_cancel_in_game', handleCannotCancelInGame);
     socket.on('choice_registered', handleChoiceRegistered);
     socket.on('opponent_made_choice', handleOpponentMadeChoice);
     socket.on('round_result', handleRoundResult);
@@ -351,7 +364,7 @@ export function useGameLogic() {
     socket.on('matchmaking_failed_system_error', handleMatchmakingFailedSystemError);
     socket.on('opponent_forfeit_coins', handleOpponentForfeitCoins);
     socket.on('forfeit_coins', handleForfeitCoins);
-    socket.on('game_ended_insufficient_funds', handleGameEndedInsufficientFunds); // Added listener
+    socket.on('game_ended_insufficient_funds', handleGameEndedInsufficientFunds);
 
     return () => {
       socket.off('match_found', handleMatchFound);
@@ -371,9 +384,15 @@ export function useGameLogic() {
       socket.off('matchmaking_failed_system_error', handleMatchmakingFailedSystemError);
       socket.off('opponent_forfeit_coins', handleOpponentForfeitCoins);
       socket.off('forfeit_coins', handleForfeitCoins);
-      socket.off('game_ended_insufficient_funds', handleGameEndedInsufficientFunds); // Added cleanup
+      socket.off('game_ended_insufficient_funds', handleGameEndedInsufficientFunds);
     };
-  }, [socket, hasMadeChoiceThisRound, longestStreak, gamePhase, resetMyTurnTimer, startMyTurnTimer, stopMyTurnTimer, resetGameToStart, yourScore, opponentScore]); // Added yourScore and opponentScore to dependencies for fallback logic
+  }, [
+    socket, handleMatchFound, handleWaiting, handleAlreadyInQueue, handleAlreadyInSession,
+    handleMatchmakingCancelled, handleNotInQueue, handleCannotCancelInGame, handleChoiceRegistered,
+    handleOpponentMadeChoice, handleRoundResult, handleOpponentDisconnected, handleGameEndedByServer,
+    handleErrorOccurred, handleMatchmakingFailedInsufficientCoins, handleMatchmakingFailedSystemError,
+    handleOpponentForfeitCoins, handleForfeitCoins, handleGameEndedInsufficientFunds
+  ]);
 
   // Game Phase Transitions (no changes here)
   useEffect(() => {
@@ -420,11 +439,11 @@ export function useGameLogic() {
     stopMyTurnTimer();
   }, [socket, sessionId, hasMadeChoiceThisRound, isConnected, stopMyTurnTimer]);
 
-  const handlePlayerReaction = (reaction: Reaction) => {
-    if (!socket || !sessionId || !isConnected) return
+  const handlePlayerReaction = useCallback((reaction: Reaction) => {
+    if (!socket || !sessionId || !isConnected) return;
 
-    socket.emit('make_reaction', { sessionId, reaction })
-  }
+    socket.emit('make_reaction', { sessionId, reaction });
+  }, [socket, sessionId, isConnected]);
 
   const handleStartGame = useCallback(() => {
     if (!telegramUser) {
@@ -534,6 +553,7 @@ export function useGameLogic() {
     gameEndReason,
     finalScores,
     canPlayAgain, // Return canPlayAgain
+    coinChange,
     // Actions
     setUsername,
     handlePlayerChoice,

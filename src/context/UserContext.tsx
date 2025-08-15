@@ -7,6 +7,9 @@ import { SOCKET_SERVER_URL } from '@/lib/constants';
 interface UserContextType {
   telegramUser: TelegramUser | null;
   userProfile: UserProfile | null;
+  setUserProfile: (profile: UserProfile | null) => void;
+  opponentProfile: UserProfile | null;
+  setOpponentProfile: (profile: UserProfile | null) => void;
   username: string;
   setUsername: (name: string) => void;
   isUsernameFromQuery: boolean;
@@ -29,6 +32,7 @@ interface UserProviderProps {
 export function UserProvider({ children }: UserProviderProps) {
   const [telegramUser, setTelegramUser] = useState<TelegramUser | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [opponentProfile, setOpponentProfile] = useState<UserProfile | null>(null);
   const [username, setUsername] = useState<string>('');
   const [isUsernameFromQuery, setIsUsernameFromQuery] = useState<boolean>(false);
 
@@ -72,6 +76,9 @@ export function UserProvider({ children }: UserProviderProps) {
   const value = {
     telegramUser,
     userProfile,
+    setUserProfile,
+    opponentProfile,
+    setOpponentProfile,
     username,
     setUsername,
     isUsernameFromQuery,
