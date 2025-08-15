@@ -1,7 +1,7 @@
 "use client";
 import Head from 'next/head';
 import { useScreenHeight } from '../hooks/useScreenHeight';
-import { useGameLogic } from '../hooks/useGameLogic';
+import { useGame } from '../context/GameContext';
 import { LoadingScreen } from '../components/game/LoadingScreen';
 import { StartScreen } from '../components/game/StartScreen';
 import { SearchingScreen } from '../components/game/SearchingScreen';
@@ -10,7 +10,7 @@ import { JoiningScreen } from '../components/game/JoiningScreen';
 import { PlayingScreen } from '../components/game/PlayingScreen';
 import { GameEndedScreen } from '../components/game/GameEndedScreen'; // Import GameEndedScreen
 import Image from 'next/image';
-import { Suspense, useEffect, useState, memo } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Header from '@/components/Header';
 
 // Ensure animate-pop is defined in your global CSS if not using a utility for it
@@ -22,9 +22,7 @@ import Header from '@/components/Header';
 // }
 // .animate-pop { animation: pop 0.5s ease-in-out; }
 
-type GamePageContentProps = ReturnType<typeof useGameLogic>;
-
-const GamePageContent = memo((props: GamePageContentProps) => {
+function GamePageContent() {
   const screenHeight = useScreenHeight();
   const {
     gamePhase, username, userProfile, myServerConfirmedUsername, opponentUsername,
@@ -43,7 +41,7 @@ const GamePageContent = memo((props: GamePageContentProps) => {
     setUsername, handlePlayerChoice,
     handlePlayerReaction, handleStartGame,
     handleEndGame, resetGameToStart, // Added resetGameToStart
-  } = props;
+  } = useGame();
 
   const [progress, setProgress] = useState(0);
 
@@ -169,17 +167,14 @@ const GamePageContent = memo((props: GamePageContentProps) => {
       </div>
     </div>
   );
-});
-
-GamePageContent.displayName = 'GamePageContent';
+}
 
 export default function Page() {
-  const gameLogicProps = useGameLogic();
   return (
     // Wrap the component that uses useSearchParams (indirectly via useGameLogic)
     // in a Suspense boundary.
     <Suspense fallback={<div>Loading page details...</div>}> {/* Or any loading UI */}
-      <GamePageContent {...gameLogicProps} />
+      <GamePageContent />
     </Suspense>
   );
 }

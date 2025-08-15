@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 import { Choice, ServerResult, GamePhase, choiceEmojis, MatchFoundData, RoundResultData, OpponentMadeChoiceData, API_URL_BOT_SCORE, SOCKET_SERVER_URL, SessionData, Reaction, TelegramUser, UserProfile } from '../lib';
 import { useSocketConnection } from './useSocketConnection';
 import { useTurnTimer } from './useTurnTimer';
@@ -36,8 +37,9 @@ interface GameEndedInsufficientFundsData {
 }
 
 export function useGameLogic() {
+  const pathname = usePathname();
   const { telegramUser, userProfile, setUserProfile, username, setUsername, isUsernameFromQuery, setOpponentProfile } = useUser();
-  const { socket, isConnected, connectionMessage: socketConnectionMessage, connectSocket } = useSocketConnection(SOCKET_SERVER_URL);
+  const { socket, isConnected, connectionMessage: socketConnectionMessage, connectSocket, disconnectSocket } = useSocketConnection(SOCKET_SERVER_URL);
   const {
     isMyTurnTimerActive, turnTimerDuration, turnTimeRemaining, turnTimerProgress,
     startMyTurnTimer, stopMyTurnTimer, resetMyTurnTimer
@@ -125,6 +127,7 @@ export function useGameLogic() {
 
   // This effect runs once when the component mounts.
   useEffect(() => {
+    if (pathname !== '/') return;
     // It checks if the game is in the 'loading' phase and if the socket is connected.
     if (gamePhase === 'loading' && isConnected && telegramUser && userProfile) {
       // If both conditions are true, it transitions the game to the 'start' phase.
@@ -132,7 +135,16 @@ export function useGameLogic() {
     }
     // The dependency array [gamePhase, isConnected, setGamePhase] ensures this effect
     // re-runs whenever any of these values change.
-  }, [gamePhase, isConnected, telegramUser, userProfile, setGamePhase]);
+  }, [pathname, gamePhase, isConnected, telegramUser, userProfile, setGamePhase]);
+
+  // Socket connection management based on pathname
+  useEffect(() => {
+    if (pathname === '/') {
+      connectSocket();
+    } else {
+      disconnectSocket();
+    }
+  }, [pathname, connectSocket, disconnectSocket]);
 
 
   // Animation Triggers
@@ -345,7 +357,7 @@ export function useGameLogic() {
 
   // Socket Event Listeners
   useEffect(() => {
-    if (!socket) return;
+    if (!socket || pathname !== '/') return;
 
     socket.on('match_found', handleMatchFound);
     socket.on('waiting_for_opponent', handleWaiting);
@@ -367,6 +379,7 @@ export function useGameLogic() {
     socket.on('game_ended_insufficient_funds', handleGameEndedInsufficientFunds);
 
     return () => {
+      if (!socket) return;
       socket.off('match_found', handleMatchFound);
       socket.off('waiting_for_opponent', handleWaiting);
       socket.off('already_in_queue', handleAlreadyInQueue);
@@ -396,6 +409,7 @@ export function useGameLogic() {
 
   // Game Phase Transitions (no changes here)
   useEffect(() => {
+    if (pathname !== '/') return;
     if (gamePhase === 'opponentFound') {
       const timer = setTimeout(() => {
         setJoiningCountdown(2);
@@ -406,6 +420,7 @@ export function useGameLogic() {
   }, [gamePhase]);
 
   useEffect(() => {
+    if (pathname !== '/') return;
     if (gamePhase === 'joining') {
       if (joiningCountdown > 0) {
         const timer = setTimeout(() => setJoiningCountdown(prev => prev - 1), 1000);
