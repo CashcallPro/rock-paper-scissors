@@ -1,20 +1,7 @@
 "use client";
 
-import Header from "@/components/Header";
 import { ShopItemCard } from "@/components/ShopItemCard";
 import { useUser } from "@/context/UserContext";
-import { UserProfile } from "@/lib/types";
-
-const mockUser: UserProfile = {
-  _id: "1",
-  username: "Player1",
-  tickets: 10,
-  coins: 100,
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-  __v: 0,
-  matches: [],
-};
 
 const gems = [
   { icon: "/shopgem1.png", amount: "100 Gems", price: "$0.99" },
@@ -28,14 +15,26 @@ const tickets = [
   { icon: "/ticket.png", amount: "120 Tickets", price: "1000 Gems" },
 ];
 
-export default function Shop() {
+interface ShopScreenProps {
+  onBack: () => void;
+}
 
-  const { userProfile } = useUser()
+export default function ShopScreen({ onBack }: ShopScreenProps) {
+  const { userProfile } = useUser();
 
   return (
-    <div className="bg-gray-800 min-h-screen text-white">
-      <Header user={userProfile} variant="back" />
-      <main className="p-4">
+    <div className="bg-gray-800 min-h-screen text-white w-full flex flex-col">
+      <div className="w-full bg-gray-800 text-white p-2 flex items-center justify-between sticky top-0 z-20">
+        <div className="flex items-center">
+          <button onClick={onBack} className="mr-3">
+            <div className='flex flex-row items-center'>
+              <img src="/back-arrow.svg" alt="Back" className="w-6 h-6" />
+              <span className="ml-2">Back</span>
+            </div>
+          </button>
+        </div>
+      </div>
+      <main className="p-4 flex-grow">
         <h1 className="text-4xl font-bold text-center mb-8">Shop</h1>
         <div className="flex justify-center gap-8">
           {/* Gems Column */}

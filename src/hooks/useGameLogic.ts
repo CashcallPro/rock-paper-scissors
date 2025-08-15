@@ -511,6 +511,18 @@ export function useGameLogic() {
   }, [gamePhase, socket, isConnected]);
 
 
+  const handleGoToShop = useCallback(() => {
+    setGamePhase('shop');
+  }, []);
+
+  const handleGoToGifts = useCallback(() => {
+    setGamePhase('gifts');
+  }, []);
+
+  const handleGoBackToStart = useCallback(() => {
+    setGamePhase('start');
+  }, []);
+
   const handleEndGame = useCallback(async () => {
     if (socket && sessionId && isConnected) {
       socket.emit('end_game', { sessionId });
@@ -577,5 +589,8 @@ export function useGameLogic() {
     handleEndGame,
     handleCancelSearch, // Exposed if you want a direct cancel button
     resetGameToStart,   // Exposed if you want to call it directly for "go back"
+    handleGoToShop,
+    handleGoToGifts,
+    handleGoBackToStart,
   };
 }

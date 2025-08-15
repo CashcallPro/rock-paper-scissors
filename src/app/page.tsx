@@ -9,6 +9,8 @@ import { OpponentFoundScreen } from '../components/game/OpponentFoundScreen';
 import { JoiningScreen } from '../components/game/JoiningScreen';
 import { PlayingScreen } from '../components/game/PlayingScreen';
 import { GameEndedScreen } from '../components/game/GameEndedScreen'; // Import GameEndedScreen
+import ShopScreen from '../components/shop/ShopScreen';
+import GiftsScreen from '../components/gifts/GiftsScreen';
 import Image from 'next/image';
 import { Suspense, useEffect, useState } from 'react';
 import Header from '@/components/Header';
@@ -41,6 +43,9 @@ function GamePageContent() {
     setUsername, handlePlayerChoice,
     handlePlayerReaction, handleStartGame,
     handleEndGame, resetGameToStart, // Added resetGameToStart
+    handleGoBackToStart,
+    handleGoToShop,
+    handleGoToGifts,
   } = useGame();
 
   const [progress, setProgress] = useState(0);
@@ -79,6 +84,8 @@ function GamePageContent() {
             isConnected={isConnected}
             isUsernameFromQuery={isUsernameFromQuery}
             userProfile={userProfile}
+            onGoToShop={handleGoToShop}
+            onGoToGifts={handleGoToGifts}
           />
         );
       case 'searching':
@@ -124,6 +131,10 @@ function GamePageContent() {
             canPlayAgain={canPlayAgain} // Pass canPlayAgain
           />
         );
+      case 'shop':
+        return <ShopScreen onBack={handleGoBackToStart} />;
+      case 'gifts':
+        return <GiftsScreen onBack={handleGoBackToStart} />;
       default:
         return null;
     }
