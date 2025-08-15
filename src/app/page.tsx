@@ -10,7 +10,7 @@ import { JoiningScreen } from '../components/game/JoiningScreen';
 import { PlayingScreen } from '../components/game/PlayingScreen';
 import { GameEndedScreen } from '../components/game/GameEndedScreen'; // Import GameEndedScreen
 import Image from 'next/image';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useState, memo } from 'react';
 import Header from '@/components/Header';
 
 // Ensure animate-pop is defined in your global CSS if not using a utility for it
@@ -22,7 +22,9 @@ import Header from '@/components/Header';
 // }
 // .animate-pop { animation: pop 0.5s ease-in-out; }
 
-function GamePageContent() {
+type GamePageContentProps = ReturnType<typeof useGameLogic>;
+
+const GamePageContent = memo((props: GamePageContentProps) => {
   const screenHeight = useScreenHeight();
   const {
     gamePhase, username, userProfile, myServerConfirmedUsername, opponentUsername,
@@ -41,7 +43,7 @@ function GamePageContent() {
     setUsername, handlePlayerChoice,
     handlePlayerReaction, handleStartGame,
     handleEndGame, resetGameToStart, // Added resetGameToStart
-  } = useGameLogic();
+  } = props;
 
   const [progress, setProgress] = useState(0);
 
@@ -167,14 +169,17 @@ function GamePageContent() {
       </div>
     </div>
   );
-}
+});
+
+GamePageContent.displayName = 'GamePageContent';
 
 export default function Page() {
+  const gameLogicProps = useGameLogic();
   return (
     // Wrap the component that uses useSearchParams (indirectly via useGameLogic)
     // in a Suspense boundary.
     <Suspense fallback={<div>Loading page details...</div>}> {/* Or any loading UI */}
-      <GamePageContent />
+      <GamePageContent {...gameLogicProps} />
     </Suspense>
   );
 }
