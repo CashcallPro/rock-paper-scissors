@@ -10,6 +10,16 @@ const nextConfig: NextConfig = {
   ],
   experimental: {
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 's3dux5rwcu.ufs.sh',
+        pathname: '/f/**', // allow all images under /f/
+      },
+    ],
+
+  },
 };
 
 export default nextConfig;

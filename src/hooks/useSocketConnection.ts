@@ -9,7 +9,6 @@ export function useSocketConnection(serverUrl: string) {
 
   useEffect(() => {
     const newSocket = io(serverUrl, {
-      autoConnect: false, // Don't connect automatically
       reconnectionAttempts: 5,
       reconnectionDelay: 3000,
     });
@@ -32,6 +31,7 @@ export function useSocketConnection(serverUrl: string) {
       setConnectionMessage(`Disconnected: ${reason}.`);
       console.log('Socket disconnected:', reason);
       if (reason === 'io server disconnect') {
+        newSocket.connect()
         // The server disconnected us, maybe we should try to reconnect.
         // For now, we'll let the user decide when to reconnect.
       }
