@@ -130,13 +130,12 @@ export const PlayingScreen = memo(function PlayingScreen({
         />
       </div>
 
-      <div className="z-10 flex flex-row sm:flex-row gap-y-2 sm:gap-x-3 pb-5 sm:mb-6 px-4 w-full" style={{ backgroundColor: '#861886' }}>
+      <div className="z-10 flex flex-row sm:flex-row gap-y-2 sm:gap-x-3 pb-5 sm:mb-6 px-4 w-full">
         {(['rock', 'paper', 'scissors'] as Choice[]).map((choice) => (
           <Button
             key={choice}
-            style={{ color: 'white' }}
             label={`${choice.charAt(0).toUpperCase() + choice.slice(1)}\n${choiceEmojis[choice]}`}
-            className="p-button-rounded text-lg sm:text-lg md:text-xl py-2 sm:py-3 px-5 sm:px-4 flex-1 whitespace-pre-line" // Added whitespace-pre-line for \n
+            className="text-lg sm:text-lg md:text-xl py-2 sm:py-3 px-5 sm:px-4 flex-1 whitespace-pre-line bg-blue-400 hover:bg-blue-500 active:bg-blue-600 rounded-lg text-white" // Added whitespace-pre-line for \n
             onClick={() => onPlayerChoice(choice)}
             disabled={hasMadeChoiceThisRound || !isConnected || !sessionId}
           />
