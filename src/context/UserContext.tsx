@@ -7,7 +7,7 @@ import { SOCKET_SERVER_URL } from '@/lib/constants';
 interface UserContextType {
   telegramUser: TelegramUser | null;
   userProfile: UserProfile | null;
-  setUserProfile: (profile: UserProfile | null) => void;
+  setUserProfile: React.Dispatch<React.SetStateAction<UserProfile | null>>
   opponentProfile: UserProfile | null;
   setOpponentProfile: (profile: UserProfile | null) => void;
   username: string;
