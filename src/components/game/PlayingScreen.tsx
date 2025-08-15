@@ -69,20 +69,9 @@ export const PlayingScreen = memo(function PlayingScreen({
         opponent={opponentProfile}
         userScore={yourScore}
         opponentScore={opponentScore ?? 0}
+        userCoins={userProfile?.coins ?? 0}
+        coinChange={coinChange}
       />
-      <div className="flex items-center justify-center bg-gray-800 text-white p-2 w-full z-10">
-        <Image src="/gem.png" alt="gem" width={24} height={24} />
-        <span className="ml-2 font-bold">{userProfile?.coins ?? 0}</span>
-        {coinChange !== 0 && (
-          <span
-            className={`ml-4 font-bold ${
-              coinChange > 0 ? 'text-green-500' : 'text-red-500'
-            } animate-ping`}
-          >
-            {coinChange > 0 ? `+${coinChange}` : coinChange}
-          </span>
-        )}
-      </div>
       {isMyTurnTimerActive && (
         <div className="w-full max-w-md px-4 my-2 z-10">
           <ProgressBar value={turnTimerProgress} showValue={false} style={{ height: '10px' }} />
