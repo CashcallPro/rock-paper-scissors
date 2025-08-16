@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Reaction, reactionEmojis } from "../../lib";
 import { ReactionButton } from "./ReactionButton";
+import type { Button as PrimeReactButton } from 'primereact/button';
 
 interface ReactionsPopupProps {
   isOpen: boolean;
   onClose: () => void;
   onReactionClick: (reaction: Reaction) => void;
-  buttonRef: React.RefObject<HTMLButtonElement | null>;
+  buttonRef: React.RefObject<PrimeReactButton | null>;
 }
 
 const ReactionsPopup: React.FC<ReactionsPopupProps> = ({
@@ -21,7 +22,7 @@ const ReactionsPopup: React.FC<ReactionsPopupProps> = ({
   useEffect(() => {
     if (isOpen && buttonRef?.current) {
       setPosition({
-        top: buttonRef.current.offsetHeight + 5,
+        top: (buttonRef.current as any).offsetHeight + 5,
         left: 0,
       });
     }

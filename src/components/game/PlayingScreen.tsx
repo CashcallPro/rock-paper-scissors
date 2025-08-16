@@ -1,5 +1,6 @@
 "use client";
 import { Button } from 'primereact/button';
+import type { Button as PrimeReactButton } from 'primereact/button';
 import { ProgressBar } from 'primereact/progressbar';
 import { Choice, choiceEmojis, Reaction, reactionEmojis } from '../../lib'; // Adjust path if necessary
 import Image from 'next/image';
@@ -63,7 +64,7 @@ export const PlayingScreen = memo(function PlayingScreen({
 }: PlayingScreenProps) {
   const { userProfile, opponentProfile } = useUser();
   const [isReactionsPopupOpen, setIsReactionsPopupOpen] = useState(false);
-  const reactionsButtonRef = useRef<HTMLButtonElement | null>(null);
+  const reactionsButtonRef = useRef<PrimeReactButton | null>(null);
 
   const handleReactionClick = (reaction: Reaction) => {
     onReactionClick(reaction);
