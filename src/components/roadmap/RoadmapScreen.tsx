@@ -9,27 +9,47 @@ interface RoadmapItem {
 const roadmapItems: RoadmapItem[] = [
   {
     title: "Basic Game Logic",
-    description: "Core rock-paper-scissors mechanics.",
+    description: "Core rock-paper-scissors mechanics implemented.",
     status: "Completed",
   },
   {
     title: "Multiplayer Backend",
-    description: "Real-time multiplayer server using Socket.IO.",
+    description: "Real-time PvP server powered by Socket.IO.",
     status: "Completed",
   },
   {
     title: "Frontend UI",
-    description: "User interface for the game, including start screen, game screen, and overlays.",
+    description: "Game UI: start screen, match screen, overlays.",
     status: "In Progress",
   },
   {
+    title: "Shop System",
+    description: "Buy/Sell Gems & Tickets via TON & Telegram Stars.",
+    status: "Planned",
+  },
+  {
+    title: "Quest System",
+    description: "Daily, weekly, and event-based quests.",
+    status: "Planned",
+  },
+  {
+    title: "Gift System",
+    description: "Random event-based player rewards.",
+    status: "Planned",
+  },
+  {
+    title: "Player Profile",
+    description: "Track stats: history, win rate, rank.",
+    status: "Planned",
+  },
+  {
     title: "Leaderboards",
-    description: "Global and friends leaderboards.",
+    description: "Global and friends rankings.",
     status: "Planned",
   },
   {
     title: "Achievements",
-    description: "Unlock achievements for completing certain tasks.",
+    description: "Unlock rewards for milestones and tasks.",
     status: "Planned",
   },
 ];
