@@ -55,11 +55,11 @@ const Header: React.FC<HeaderProps> = ({ user, variant = 'default' }) => {
         </div>
         <div className="flex items-center text-lg space-x-4">
           <div className='flex items-center space-x-2'>
-            <HeaderButton ref={energyButtonRef} onClick={() => setIsEnergyPopupOpen(true)} backgroundImage="url('/gem.png')" />
+            <HeaderButton ref={energyButtonRef} onClick={() => setIsEnergyPopupOpen(true)} backgroundImage="url('https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmW22ertJ6BnIYTXc4EJmok0P1H8sUCDWOMSAvj')" />
             <span role="img" aria-label="energy">{user.coins ?? 0}</span>
           </div>
           <div className='flex items-center space-x-2'>
-            <HeaderButton ref={ticketButtonRef} onClick={() => setIsTicketPopupOpen(true)} backgroundImage="url('/ticket.png')" />
+            <HeaderButton ref={ticketButtonRef} onClick={() => setIsTicketPopupOpen(true)} backgroundImage="url('https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWwkQqvlMqyBcG6bIC4doaQPWmsZkRphVr3gNx')" />
             <span role="img" aria-label="tickets">{user.tickets ?? 0}</span>
           </div>
         </div>

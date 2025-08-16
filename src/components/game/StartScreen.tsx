@@ -52,7 +52,7 @@ export function StartScreen({
         />
         <div className="flex items-start z-10 w-full p-2 justify-between gap-4 mt-4">
           {/* Roadmap Button */}
-          <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
+          <div className="flex flex-col items-center bg-black bg-opacity-5 p-2 rounded-lg">
             <HeaderButton onClick={onOpenRoadmap} backgroundImage="url('https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWFBZpvWdRoqXtcNr8msQ4ObBjiV3e20n5JySx')" />
             <span className="text-white text-xs mt-1">Roadmap</span>
           </div>
@@ -109,7 +109,7 @@ export function StartScreen({
             <BattleButton
               onClick={onStartGame}
               disabled={true}
-              title="BATTLE"
+              title="SOON!"
               backgroundImage="url('/button-yellow.png')" />
             <div className="flex items-center justify-center text-white z-10">
               <span>1&nbsp;</span>
