@@ -63,11 +63,6 @@ export function StartScreen({
             <HeaderButton onClick={onOpenGifts} backgroundImage="url('/gift.png')" />
             <span className="text-white text-xs mt-1">Gift</span>
           </div>
-          {/* Quest Button */}
-          <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
-            <HeaderButton onClick={onOpenQuest} backgroundImage="url('https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWUCM2kH9thzndp9rDx7cfkvlgICFVWXuHR3qb')" />
-            <span className="text-white text-xs mt-1">Quests</span>
-          </div>
         </div>
         <div className="flex items-start z-10 w-full p-2 justify-between gap-4">
           {/* Shop Button */}
@@ -80,6 +75,13 @@ export function StartScreen({
           <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
             <HeaderButton onClick={onOpenFriends} backgroundImage="url('https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWBcfixi5VL20zUdwJ5Dkotb73Sa8ElYjuCxB4')" />
             <span className="text-white text-xs mt-1">Friends</span>
+          </div>
+        </div>
+        <div className="flex items-start z-10 w-full p-2 justify-between gap-4">
+          {/* Quest Button */}
+          <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
+            <HeaderButton onClick={onOpenQuest} backgroundImage="url('https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWUCM2kH9thzndp9rDx7cfkvlgICFVWXuHR3qb')" />
+            <span className="text-white text-xs mt-1">Quests</span>
           </div>
         </div>
         <div
