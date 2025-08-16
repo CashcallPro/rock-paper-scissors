@@ -60,30 +60,30 @@ export const StartScreen = memo(function StartScreen({
             <span className="text-white text-xs mt-1">Roadmap</span>
           </div>
           {/* Gift Button */}
-          <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
+          {/* <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
             <HeaderButton onClick={onOpenGifts} backgroundImage={`url('${IMAGES.GIFT_BG}')`} />
             <span className="text-white text-xs mt-1">Gift</span>
-          </div>
+          </div> */}
         </div>
         <div className="flex items-start z-10 w-full p-2 justify-between gap-4">
           {/* Shop Button */}
-          <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
+          {/* <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
             <HeaderButton onClick={onOpenShop} backgroundImage={`url('${IMAGES.SHOP}')`} />
             <span className="text-white text-xs mt-1">Shop</span>
-          </div>
+          </div> */}
 
           {/* Shop Button */}
-          <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
+          {/* <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
             <HeaderButton onClick={onOpenFriends} backgroundImage={`url('${IMAGES.FRIENDS_BG}')`} />
             <span className="text-white text-xs mt-1">Friends</span>
-          </div>
+          </div> */}
         </div>
         <div className="flex items-start z-10 w-full p-2 justify-between gap-4">
           {/* Quest Button */}
-          <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
+          {/* <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
             <HeaderButton onClick={onOpenQuest} backgroundImage={`url('${IMAGES.QUESTS_BG}')`} />
             <span className="text-white text-xs mt-1">Quests</span>
-          </div>
+          </div> */}
         </div>
         {/* Content */}
         <div
