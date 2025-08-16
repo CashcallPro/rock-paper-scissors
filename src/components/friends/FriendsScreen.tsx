@@ -36,7 +36,7 @@ export default function FriendsScreen({ onBack }: FriendsScreenProps) {
             <div key={friend.id} className="flex items-center justify-between w-full max-w-sm p-2 bg-gray-700 rounded-lg">
               <div className="flex items-center">
                 <Image src={friend.photo} alt={friend.name} width={50} height={50} className="rounded-full" />
-                <span className="ml-4 text-lg">{friend.name}</span>
+                <span className="ml-4 text-lg truncate">{friend.name}</span>
               </div>
               <button
                 onClick={() => console.log(`Inviting ${friend.name}`)}

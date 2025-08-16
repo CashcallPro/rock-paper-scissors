@@ -50,7 +50,7 @@ const Header: React.FC<HeaderProps> = ({ user, variant = 'default' }) => {
                   <img src={IMAGES.ARMOR} alt={user.username} className="w-8 h-8" />
                 </div>
               )}
-              <span className="font-bold text-lg">{user.username}</span>
+              <span className="font-bold text-lg truncate max-w-xs">{user.username}</span>
             </>
           )}
         </div>
