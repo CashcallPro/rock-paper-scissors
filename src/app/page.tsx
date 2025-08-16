@@ -83,7 +83,7 @@ function GamePageContent() {
       case 'joining':
         return 'https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWkCroS4xNpESWBGz9gjT1xRYHtIreZaJA3Mu7';
       default:
-        return '';
+        return 'https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWkCroS4xNpESWBGz9gjT1xRYHtIreZaJA3Mu7';
     }
   };
 
