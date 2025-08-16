@@ -4,6 +4,7 @@ import { useScreenHeight } from '../hooks/useScreenHeight';
 import { useGame } from '../context/GameContext';
 import ShopScreen from '../components/shop/ShopScreen';
 import GiftsScreen from '../components/gifts/GiftsScreen';
+import RoadmapScreen from '../components/roadmap/RoadmapScreen';
 import { LoadingScreen } from '../components/game/LoadingScreen';
 import { StartScreen } from '../components/game/StartScreen';
 import { SearchingScreen } from '../components/game/SearchingScreen';
@@ -187,6 +188,11 @@ function GamePageContent() {
       {overlay === 'gifts' && (
         <div className="absolute inset-0 z-30">
           <GiftsScreen onBack={closeOverlay} />
+        </div>
+      )}
+      {overlay === 'roadmap' && (
+        <div className="absolute inset-0 z-30">
+          <RoadmapScreen onBack={closeOverlay} />
         </div>
       )}
     </div>
