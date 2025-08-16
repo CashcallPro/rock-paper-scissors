@@ -6,6 +6,7 @@ import ShopScreen from '../components/shop/ShopScreen';
 import GiftsScreen from '../components/gifts/GiftsScreen';
 import RoadmapScreen from '../components/roadmap/RoadmapScreen';
 import FriendsScreen from '../components/friends/FriendsScreen';
+import QuestsScreen from '../components/quests/QuestsScreen';
 import { LoadingScreen } from '../components/game/LoadingScreen';
 import { StartScreen } from '../components/game/StartScreen';
 import { SearchingScreen } from '../components/game/SearchingScreen';
@@ -51,6 +52,7 @@ function GamePageContent() {
     openGiftsOverlay,
     openRoadmapOverlay,
     openFriendsOverlay,
+    openQuestOverlay,
   } = useGame();
 
   const [progress, setProgress] = useState(0);
@@ -93,6 +95,7 @@ function GamePageContent() {
             onOpenGifts={openGiftsOverlay}
             onOpenRoadmap={openRoadmapOverlay}
             onOpenFriends={openFriendsOverlay}
+            onOpenQuest={openQuestOverlay}
           />
         );
       case 'searching':
@@ -201,6 +204,11 @@ function GamePageContent() {
       {overlay === 'friends' && (
         <div className="absolute inset-0 z-30">
           <FriendsScreen onBack={closeOverlay} />
+        </div>
+      )}
+      {overlay === 'quest' && (
+        <div className="absolute inset-0 z-30">
+          <QuestsScreen onBack={closeOverlay} />
         </div>
       )}
     </div>

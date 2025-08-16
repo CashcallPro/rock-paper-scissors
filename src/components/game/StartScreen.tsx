@@ -25,6 +25,7 @@ interface StartScreenProps {
   onOpenGifts: () => void;
   onOpenRoadmap: () => void;
   onOpenFriends: () => void;
+  onOpenQuest: () => void;
 }
 
 export function StartScreen({
@@ -41,6 +42,7 @@ export function StartScreen({
   onOpenGifts,
   onOpenRoadmap,
   onOpenFriends,
+  onOpenQuest,
 }: StartScreenProps) {
   const router = useRouter();
 
@@ -60,6 +62,11 @@ export function StartScreen({
           <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
             <HeaderButton onClick={onOpenGifts} backgroundImage="url('/gift.png')" />
             <span className="text-white text-xs mt-1">Gift</span>
+          </div>
+          {/* Quest Button */}
+          <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
+            <HeaderButton onClick={onOpenQuest} backgroundImage="url('https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWUCM2kH9thzndp9rDx7cfkvlgICFVWXuHR3qb')" />
+            <span className="text-white text-xs mt-1">Quests</span>
           </div>
         </div>
         <div className="flex items-start z-10 w-full p-2 justify-between gap-4">
