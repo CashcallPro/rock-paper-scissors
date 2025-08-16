@@ -20,10 +20,9 @@ const ReactionsPopup: React.FC<ReactionsPopupProps> = ({
 
   useEffect(() => {
     if (isOpen && buttonRef?.current) {
-      const buttonRect = buttonRef.current.getBoundingClientRect();
       setPosition({
-        top: buttonRect.bottom + window.scrollY + 5,
-        left: buttonRect.left + window.scrollX,
+        top: buttonRef.current.offsetHeight + 5,
+        left: 0,
       });
     }
   }, [isOpen, buttonRef]);
