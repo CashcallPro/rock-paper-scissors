@@ -1,6 +1,6 @@
 "use client";
 import { InputText } from 'primereact/inputtext';
-import { Suspense } from 'react';
+import { Suspense, memo } from 'react';
 import Image from 'next/image';
 import { UserProfile } from '@/lib';
 import { BattleButton } from '../BattleButton';
@@ -28,7 +28,7 @@ interface StartScreenProps {
   onOpenQuest: () => void;
 }
 
-export function StartScreen({
+export const StartScreen = memo(function StartScreen({
   username,
   setUsername,
   onStartGame,
@@ -89,21 +89,6 @@ export function StartScreen({
           className="w-full flex flex-col items-center justify-center h-full text-center px-4"
           style={{ backgroundColor: "transparent" }}
         >
-          <Image
-            alt=''
-            // src="/start-bg.png"
-            src="https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWkCroS4xNpESWBGz9gjT1xRYHtIreZaJA3Mu7"
-            layout='fill'
-            objectFit='cover'
-            style={{
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              right: 0,
-              left: 0,
-              filter: 'brightness(0.6)',
-            }}
-          />
           <div className='absolute top-0 w-full flex flex-col items-center justify-center h-full text-center px-4'>
 
             <h1 className='z-10' style={{ color: 'white' }}>Welcome to</h1>
@@ -139,4 +124,4 @@ export function StartScreen({
       </>
     </Suspense>
   );
-}
+});

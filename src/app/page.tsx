@@ -73,6 +73,20 @@ function GamePageContent() {
     }
   }, [gamePhase]);
 
+  const getBackgroundImage = (gamePhase: string) => {
+    switch (gamePhase) {
+      case 'loading':
+      case 'start':
+      case 'playing':
+      case 'searching':
+      case 'opponentFound':
+      case 'joining':
+        return 'https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWkCroS4xNpESWBGz9gjT1xRYHtIreZaJA3Mu7';
+      default:
+        return '';
+    }
+  };
+
   const renderGameContent = () => {
 
     switch (gamePhase) {
@@ -147,7 +161,7 @@ function GamePageContent() {
   };
 
   return (
-    <div className="relative w-screen overflow-hidden flex flex-col items-center bg-gray-100" style={{ height: screenHeight }}>
+    <div className="relative w-screen overflow-hidden flex flex-col items-center" style={{ height: screenHeight }}>
       <Head>
         <title>
           {gamePhase === 'playing' && myServerConfirmedUsername && opponentUsername
@@ -156,6 +170,24 @@ function GamePageContent() {
         </title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       </Head>
+
+      {getBackgroundImage(gamePhase) && (
+        <Image
+          alt="background"
+          src={getBackgroundImage(gamePhase)}
+          layout="fill"
+          objectFit="cover"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 0,
+            filter: gamePhase === 'start' ? 'brightness(0.6)' : 'none',
+          }}
+        />
+      )}
 
       <div className={`w-full flex flex-col items-center ${gamePhase === 'playing' ? 'justify-between' : 'justify-center flex-grow'} z-10`} style={{ height: screenHeight }}>
         {/* Exit Game button can be part of the main layout or conditional */}
