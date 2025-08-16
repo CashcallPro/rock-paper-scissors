@@ -16,13 +16,13 @@ interface PlayerDisplayProps {
 
 const PlayerChoiceDisplay = ({ name, emoji, isOpponent = false, animate }: PlayerDisplayProps) => (
   <div className="flex flex-col items-center z-10">
-    {isOpponent && <span className="text-xs sm:text-sm text-white-500">{name || 'Opponent'}</span>}
+    {isOpponent && <span className="text-xs sm:text-sm text-white">{name || 'Opponent'}</span>}
     <div
-      className={`text-9xl sm:text-6xl ${isOpponent ? 'transform rotate-180' : ''} ${animate ? 'animate-pop' : ''}`}
+      className={`text-9xl sm:text-6xl text-white ${isOpponent ? 'transform rotate-180' : ''} ${animate ? 'animate-pop' : ''}`}
     >
       {emoji || '?'}
     </div>
-    {!isOpponent && <span className="text-xs sm:text-sm text-white-500">{name || 'You'}</span>}
+    {!isOpponent && <span className="text-xs sm:text-sm text-white">{name || 'You'}</span>}
   </div>
 );
 
@@ -85,7 +85,7 @@ export const PlayingScreen = memo(function PlayingScreen({
 
         <Image
           alt=''
-          src="/game-bg.jpg"
+          src="https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWkCroS4xNpESWBGz9gjT1xRYHtIreZaJA3Mu7"
           layout='fill'
           objectFit='cover'
           style={{
@@ -97,14 +97,7 @@ export const PlayingScreen = memo(function PlayingScreen({
           }}
         />
 
-        <PlayerChoiceDisplay
-          name={opponentUsername}
-          emoji={opponentChoiceEmoji}
-          animate={opponentChoiceAnimate}
-          isOpponent
-        />
-
-        <div className='z-10 flex-col absolute left-5'>
+        <div className='z-20 flex-col absolute left-5'>
           {(Object.keys(reactionEmojis)).map(reaction => {
             return (
               <div className='w-10 h-10 items-center justify-center'>
@@ -119,15 +112,24 @@ export const PlayingScreen = memo(function PlayingScreen({
           })}
         </div>
 
-        <div className="z-10 text-lg sm:text-xl font-medium h-auto min-h-[24px] text-white sm:min-h-[28px] my-1 sm:my-2 text-center px-2">
-          {roundResult ? `${roundResult}${roundReason ? ` (${roundReason})` : ''}` : roundStatusMessage || <> </>}
-        </div>
+        <div className='bg-blue-500/50 w-full flex flex-col items-center justify-center space-y-1 sm:space-y-2 sm:py-2 z-10 py-4'>
+          <PlayerChoiceDisplay
+            name={opponentUsername}
+            emoji={opponentChoiceEmoji}
+            animate={opponentChoiceAnimate}
+            isOpponent
+          />
 
-        <PlayerChoiceDisplay
-          name={myUsername}
-          emoji={myChoiceEmoji}
-          animate={myChoiceAnimate}
-        />
+          <div className="z-10 text-lg sm:text-xl font-medium h-auto min-h-[24px] text-white sm:min-h-[28px] my-1 sm:my-2 text-center px-2">
+            {roundResult ? `${roundResult}${roundReason ? ` (${roundReason})` : ''}` : roundStatusMessage || <> </>}
+          </div>
+
+          <PlayerChoiceDisplay
+            name={myUsername}
+            emoji={myChoiceEmoji}
+            animate={myChoiceAnimate}
+          />
+        </div>
       </div>
 
       <div className="z-10 flex flex-row sm:flex-row gap-y-2 sm:gap-x-3 pb-5 mb-12 sm:mb-6 px-16 w-full justify-between">

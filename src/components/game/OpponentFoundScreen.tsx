@@ -11,7 +11,7 @@ export function OpponentFoundScreen({ myUsername, opponentUsername }: OpponentFo
     <div className="flex flex-col items-center justify-center w-full h-full text-center px-4">
       <Image
         alt=''
-        src="/start-bg.png"
+        src="https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWkCroS4xNpESWBGz9gjT1xRYHtIreZaJA3Mu7"
         layout='fill'
         objectFit='cover'
         style={{
