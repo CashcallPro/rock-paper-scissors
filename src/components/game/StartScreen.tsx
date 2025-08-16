@@ -75,7 +75,7 @@ export function StartScreen({
             }}
           />
           <h1 className='z-10' style={{ color: 'white' }}>Welcome to</h1>
-          <Image src={"/logo_rpstitan.png"} alt='logo' width={200} height={140} className='z-10 mb-16' />
+          <Image src={"/logo_rpstitan.png"} alt='logo' width={200} height={140} className='z-10 mb-8' />
           <BattleButton
             onClick={onStartGame}
             disabled={!isConnected} />
@@ -83,6 +83,17 @@ export function StartScreen({
             <span>10&nbsp;</span>
             <Image src="/gem.png" alt="gem" width={20} height={20} className="mx-1" />
             <span>&nbsp;per round</span>
+          </div>
+          <div className="mt-2" />
+          <BattleButton
+            onClick={onStartGame}
+            disabled={true}
+            title="BATTLE" 
+            backgroundImage="url('/button-yellow.png')"/>
+          <div className="flex items-center justify-center text-white z-10">
+            <span>1&nbsp;</span>
+            <Image src="/ticket.png" alt="ticket" width={20} height={20} className="mx-1" />
+            <span>&nbsp;for 5 rounds</span>
           </div>
           {(connectionMessage || userActionMessage) && (
             <p className="mt-4 text-sm text-red-500 z-10">
