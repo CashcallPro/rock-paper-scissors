@@ -93,7 +93,22 @@ export const StartScreen = memo(function StartScreen({
           <div className='absolute top-0 w-full flex flex-col items-center justify-center h-full text-center px-4'>
 
             <h1 className='z-10' style={{ color: 'white' }}>Welcome to</h1>
-            <Image src={IMAGES.LOGO} alt='logo' width={200} height={140} className='z-10 mb-8' />
+            <div className="relative flex justify-center items-center w-[200px] h-[140px] mb-8">
+              <Image
+                src={IMAGES.LOGO_LIGHT_EFFECT}
+                alt="logo light effect"
+                layout="fill"
+                objectFit="contain"
+                className="absolute z-0"
+              />
+              <Image
+                src={IMAGES.LOGO}
+                alt="logo"
+                width={200}
+                height={140}
+                className="relative z-10"
+              />
+            </div>
             <BattleButton
               onClick={onStartGame}
               disabled={!isConnected} />

@@ -15,5 +15,6 @@ export const IMAGES = {
   GIFT_BG: "https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmW3ssFu1ryYdTmWHE5tBnjQ09Mai8NqoLrPkDf",
   FRIENDS_BG: "https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWBcfixi5VL20zUdwJ5Dkotb73Sa8ElYjuCxB4",
   QUESTS_BG: "https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWUCM2kH9thzndp9rDx7cfkvlgICFVWXuHR3qb",
-  LOGO: "https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWDiDMJ0QRj5Y3Tn17qWlMCd6irautIgfHA0PL",
+  LOGO: "https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmW4PxQcwZQKCsSAxzqmIEXfFjeBuagkiWrlPp9",
+  LOGO_LIGHT_EFFECT: "https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWg8vz8QgjQOCJrwExd4lz8eost7RPI6mVGbaA",
 };
