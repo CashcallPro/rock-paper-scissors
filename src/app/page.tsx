@@ -76,7 +76,6 @@ function GamePageContent() {
   const getBackgroundImage = (gamePhase: string) => {
     switch (gamePhase) {
       case 'loading':
-        return '/start-bg.png';
       case 'start':
       case 'playing':
       case 'searching':
