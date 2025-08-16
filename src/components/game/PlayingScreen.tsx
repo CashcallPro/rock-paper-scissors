@@ -116,7 +116,27 @@ export const PlayingScreen = memo(function PlayingScreen({
           />
 
           <div className="z-10 text-lg sm:text-xl font-medium h-auto min-h-[24px] text-white sm:min-h-[28px] my-1 sm:my-2 text-center px-2">
-            {roundResult ? `${roundResult}${roundReason ? ` (${roundReason})` : ''}` : roundStatusMessage || <> </>}
+            {(() => {
+              if (!roundResult) {
+                return roundStatusMessage || <>&nbsp;</>;
+              }
+
+              const isWin = roundResult.includes("won");
+              const isLoss = roundResult.includes("lost");
+              const isTie = roundResult.includes("tie");
+
+              const colorClass = isWin ? 'text-green-400' : isLoss ? 'text-red-500' : 'text-white';
+              const text = isWin ? 'Win' : isLoss ? 'Lose' : 'Tie';
+
+              return (
+                <div className="flex flex-col items-center justify-center">
+                  <span className={`animate-scale-up text-5xl sm:text-6xl font-bold ${colorClass}`}>
+                    {text}
+                  </span>
+                  {roundReason && <p className="text-xs text-gray-300 mt-1">{roundReason}</p>}
+                </div>
+              );
+            })()}
           </div>
 
           <PlayerChoiceDisplay
