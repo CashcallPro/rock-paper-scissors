@@ -5,6 +5,7 @@ import { useGame } from '../context/GameContext';
 import ShopScreen from '../components/shop/ShopScreen';
 import GiftsScreen from '../components/gifts/GiftsScreen';
 import RoadmapScreen from '../components/roadmap/RoadmapScreen';
+import FriendsScreen from '../components/friends/FriendsScreen';
 import { LoadingScreen } from '../components/game/LoadingScreen';
 import { StartScreen } from '../components/game/StartScreen';
 import { SearchingScreen } from '../components/game/SearchingScreen';
@@ -49,6 +50,7 @@ function GamePageContent() {
     openShopOverlay,
     openGiftsOverlay,
     openRoadmapOverlay,
+    openFriendsOverlay,
   } = useGame();
 
   const [progress, setProgress] = useState(0);
@@ -90,6 +92,7 @@ function GamePageContent() {
             onOpenShop={openShopOverlay}
             onOpenGifts={openGiftsOverlay}
             onOpenRoadmap={openRoadmapOverlay}
+            onOpenFriends={openFriendsOverlay}
           />
         );
       case 'searching':
@@ -193,6 +196,11 @@ function GamePageContent() {
       {overlay === 'roadmap' && (
         <div className="absolute inset-0 z-30">
           <RoadmapScreen onBack={closeOverlay} />
+        </div>
+      )}
+      {overlay === 'friends' && (
+        <div className="absolute inset-0 z-30">
+          <FriendsScreen onBack={closeOverlay} />
         </div>
       )}
     </div>
