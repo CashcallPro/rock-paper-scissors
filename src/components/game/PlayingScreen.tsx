@@ -81,21 +81,7 @@ export const PlayingScreen = memo(function PlayingScreen({
         </div>
       )}
 
-      <div className="flex-grow w-full bg-green-200 flex flex-col items-center justify-center space-y-1 sm:space-y-2 py-1 sm:py-2">
-
-        <Image
-          alt=''
-          src="https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWkCroS4xNpESWBGz9gjT1xRYHtIreZaJA3Mu7"
-          layout='fill'
-          objectFit='cover'
-          style={{
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-            right: 0,
-            left: 0,
-          }}
-        />
+      <div className="flex-grow w-full flex flex-col items-center justify-center space-y-1 sm:space-y-2 py-1 sm:py-2">
 
         <div className='z-20 flex-col absolute left-5'>
           {(Object.keys(reactionEmojis)).map(reaction => {

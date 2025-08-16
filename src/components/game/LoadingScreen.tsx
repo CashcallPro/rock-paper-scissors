@@ -8,10 +8,7 @@ interface LoadingScreenProps {
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ connectionMessage, progress }) => {
   return (
     <div
-      className="flex flex-col items-center justify-center h-full bg-cover bg-center w-full"
-      style={{
-        backgroundImage: "url('/start-bg.png')", filter: 'brightness(0.5)',
-      }}
+      className="flex flex-col items-center justify-center h-full w-full"
     >
       <div className="text-center text-white">
         <p className="text-lg font-semibold mb-4">Loading...</p>
