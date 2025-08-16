@@ -65,7 +65,7 @@ export function useGameLogic() {
   const [opponentUsername, setOpponentUsername] = useState<string | null>(null);
 
   // UI messages and controls
-  const [overlay, setOverlay] = useState<'shop' | 'gifts' | 'roadmap' | 'friends' | null>(null);
+  const [overlay, setOverlay] = useState<'shop' | 'gifts' | 'roadmap' | 'friends' | 'quest' | null>(null);
   const [userActionMessage, setUserActionMessage] = useState<string>('');
   const [roundStatusMessage, setRoundStatusMessage] = useState<string>('');
   const [hasMadeChoiceThisRound, setHasMadeChoiceThisRound] = useState<boolean>(false);
@@ -513,6 +513,10 @@ export function useGameLogic() {
     setOverlay('friends');
   }, []);
 
+  const openQuestOverlay = useCallback(() => {
+    setOverlay('quest');
+  }, []);
+
   const closeOverlay = useCallback(() => {
     setOverlay(null);
   }, []);
@@ -588,6 +592,7 @@ export function useGameLogic() {
     openGiftsOverlay,
     openRoadmapOverlay,
     openFriendsOverlay,
+    openQuestOverlay,
     closeOverlay,
   };
 }
