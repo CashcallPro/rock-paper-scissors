@@ -56,7 +56,7 @@ const Header: React.FC<HeaderProps> = ({ user, variant = 'default' }) => {
         </div>
         <div className="flex items-center text-lg space-x-4">
           <div className='flex items-center space-x-2'>
-            <HeaderButton ref={energyButtonRef} onClick={() => setIsEnergyPopupOpen(true)} backgroundImage={`url('${IMAGES.GIFT_BG}')`} />
+            <HeaderButton ref={energyButtonRef} onClick={() => setIsEnergyPopupOpen(true)} backgroundImage={`url('${IMAGES.GEM}')`} />
             <span role="img" aria-label="energy">{user.coins ?? 0}</span>
           </div>
           <div className='flex items-center space-x-2'>
