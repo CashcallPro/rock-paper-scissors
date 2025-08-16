@@ -1,13 +1,14 @@
 "use client";
 
 import { GiftItemCard } from "@/components/GiftItemCard";
+import { IMAGES } from "@/lib/image-constants";
 import { useUser } from "@/context/UserContext";
 
 const gifts = [
-  { icon: "/gem.png", name: "Check in daily", amount: "10 Gems" },
-  { icon: "/ticket.png", name: "Follow twitter", amount: "5 Tickets" },
-  { icon: "/gem.png", name: "Play 3 mathces", amount: "20 Gems" },
-  { icon: "/ticket.png", name: "Win 10 mathces", amount: "10 Tickets" },
+  { icon: IMAGES.GEM, name: "Check in daily", amount: "10 Gems" },
+  { icon: IMAGES.TICKET, name: "Follow twitter", amount: "5 Tickets" },
+  { icon: IMAGES.GEM, name: "Play 3 mathces", amount: "20 Gems" },
+  { icon: IMAGES.TICKET, name: "Win 10 mathces", amount: "10 Tickets" },
 ];
 
 interface GiftsScreenProps {
@@ -23,7 +24,7 @@ export default function GiftsScreen({ onBack }: GiftsScreenProps) {
         <div className="flex items-center">
           <button onClick={onBack} className="mr-3">
             <div className='flex flex-row items-center'>
-              <img src="/back-arrow.svg" alt="Back" className="w-6 h-6" />
+              <img src={IMAGES.BACK_ARROW} alt="Back" className="w-6 h-6" />
               <span className="ml-2">Back</span>
             </div>
           </button>

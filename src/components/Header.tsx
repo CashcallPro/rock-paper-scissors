@@ -4,6 +4,7 @@ import React, { useState, useRef } from 'react';
 import { UserProfile } from '../lib/types';
 import Popup from './Popup';
 import { HeaderButton } from './HeaderButton';
+import { IMAGES } from '@/lib/image-constants';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -36,7 +37,7 @@ const Header: React.FC<HeaderProps> = ({ user, variant = 'default' }) => {
           {variant === 'back' ? (
             <button onClick={goBack} className="mr-3">
               <div className='flex flex-row'>
-                <img src="/back-arrow.svg" alt="Back" className="w-6 h-6" />
+                <img src={IMAGES.BACK_ARROW} alt="Back" className="w-6 h-6" />
                 back
               </div>
             </button>
@@ -46,7 +47,7 @@ const Header: React.FC<HeaderProps> = ({ user, variant = 'default' }) => {
                 <img src={user.photo_url} alt={user.username} className="w-10 h-10 rounded-full mr-3" />
               ) : (
                 <div className="w-10 h-10 rounded-full bg-gray-500 mr-3 flex items-center justify-center">
-                  <img src="/armor.png" alt={user.username} className="w-8 h-8" />
+                  <img src={IMAGES.ARMOR} alt={user.username} className="w-8 h-8" />
                 </div>
               )}
               <span className="font-bold text-lg">{user.username}</span>
@@ -55,11 +56,11 @@ const Header: React.FC<HeaderProps> = ({ user, variant = 'default' }) => {
         </div>
         <div className="flex items-center text-lg space-x-4">
           <div className='flex items-center space-x-2'>
-            <HeaderButton ref={energyButtonRef} onClick={() => setIsEnergyPopupOpen(true)} backgroundImage="url('https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmW22ertJ6BnIYTXc4EJmok0P1H8sUCDWOMSAvj')" />
+            <HeaderButton ref={energyButtonRef} onClick={() => setIsEnergyPopupOpen(true)} backgroundImage={`url('${IMAGES.GIFT_BG}')`} />
             <span role="img" aria-label="energy">{user.coins ?? 0}</span>
           </div>
           <div className='flex items-center space-x-2'>
-            <HeaderButton ref={ticketButtonRef} onClick={() => setIsTicketPopupOpen(true)} backgroundImage="url('https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWwkQqvlMqyBcG6bIC4doaQPWmsZkRphVr3gNx')" />
+            <HeaderButton ref={ticketButtonRef} onClick={() => setIsTicketPopupOpen(true)} backgroundImage={`url('${IMAGES.TICKET}')`} />
             <span role="img" aria-label="tickets">{user.tickets ?? 0}</span>
           </div>
         </div>

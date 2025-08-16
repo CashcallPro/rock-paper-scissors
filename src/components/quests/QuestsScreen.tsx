@@ -1,20 +1,21 @@
 "use client";
 
 import { QuestItemCard } from "@/components/QuestItemCard";
+import { IMAGES } from "@/lib/image-constants";
 import { useUser } from "@/context/UserContext";
 
 const quests = [
   {
     name: "Daily Quest",
     amount: "10 Gems",
-    rewardImage: "https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWUCM2kH9thzndp9rDx7cfkvlgICFVWXuHR3qb",
+    rewardImage: IMAGES.QUESTS_BG,
     isAd: false,
   },
   {
     name: "Special Offer",
     amount: "5 Tickets",
-    rewardImage: "https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWUCM2kH9thzndp9rDx7cfkvlgICFVWXuHR3qb",
-    adImage: "https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWEYeybEAuTfLkmgZWXP1wh9NA2tcVOJjDa8Rv",
+    rewardImage: IMAGES.QUESTS_BG,
+    adImage: IMAGES.QUESTS_BG,
     isAd: true,
   },
 ];
@@ -32,7 +33,7 @@ export default function QuestsScreen({ onBack }: QuestsScreenProps) {
         <div className="flex items-center">
           <button onClick={onBack} className="mr-3">
             <div className='flex flex-row items-center'>
-              <img src="/back-arrow.svg" alt="Back" className="w-6 h-6" />
+              <img src={IMAGES.BACK_ARROW} alt="Back" className="w-6 h-6" />
               <span className="ml-2">Back</span>
             </div>
           </button>
