@@ -84,13 +84,12 @@ export function StartScreen({
             <Image src="/gem.png" alt="gem" width={20} height={20} className="mx-1" />
             <span>&nbsp;per round</span>
           </div>
-          <div className="mt-8" />
+          <div className="mt-2" />
           <BattleButton
             onClick={onStartGame}
-            disabled={!isConnected}
-            title="BATTLE (5 ROUNDS)"
-            backgroundImage="url('/btn-play.png')"
-          />
+            disabled={true}
+            title="BATTLE" 
+            backgroundImage="url('/button-yellow.png')"/>
           <div className="flex items-center justify-center text-white z-10">
             <span>1&nbsp;</span>
             <Image src="/ticket.png" alt="ticket" width={20} height={20} className="mx-1" />
