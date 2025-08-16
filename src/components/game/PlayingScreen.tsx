@@ -4,8 +4,9 @@ import { ProgressBar } from 'primereact/progressbar';
 import { Choice, choiceEmojis, Reaction, reactionEmojis } from '../../lib'; // Adjust path if necessary
 import Image from 'next/image';
 import PlayingHeader from './PlayingHeader';
-import { memo } from 'react';
+import { memo, useRef, useState } from 'react';
 import { useUser } from '../../context/UserContext';
+import ReactionsPopup from './ReactionsPopup';
 
 interface PlayerDisplayProps {
   name: string | null;
@@ -61,6 +62,13 @@ export const PlayingScreen = memo(function PlayingScreen({
   coinChange,
 }: PlayingScreenProps) {
   const { userProfile, opponentProfile } = useUser();
+  const [isReactionsPopupOpen, setIsReactionsPopupOpen] = useState(false);
+  const reactionsButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  const handleReactionClick = (reaction: Reaction) => {
+    onReactionClick(reaction);
+    setIsReactionsPopupOpen(false);
+  };
 
   return (
     <>
@@ -98,18 +106,19 @@ export const PlayingScreen = memo(function PlayingScreen({
         />
 
         <div className='z-20 flex-col absolute left-5'>
-          {(Object.keys(reactionEmojis)).map(reaction => {
-            return (
-              <div className='w-10 h-10 items-center justify-center'>
-                <Button
-                  key={reaction}
-                  onClick={() => onReactionClick(reaction as Reaction)}
-                >
-                  <span className="text-3xl">{reactionEmojis[reaction]}</span>
-                </Button>
-              </div>
-            )
-          })}
+          <Button
+            ref={reactionsButtonRef}
+            onClick={() => setIsReactionsPopupOpen(prev => !prev)}
+            className="bg-gray-800 text-white p-2 rounded-full"
+          >
+            <span className="text-3xl">😀</span>
+          </Button>
+          <ReactionsPopup
+            isOpen={isReactionsPopupOpen}
+            onClose={() => setIsReactionsPopupOpen(false)}
+            onReactionClick={handleReactionClick}
+            buttonRef={reactionsButtonRef}
+          />
         </div>
 
         <div className='bg-blue-500/50 w-full flex flex-col items-center justify-center space-y-1 sm:space-y-2 sm:py-2 z-10 py-4'>
