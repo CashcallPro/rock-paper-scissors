@@ -23,6 +23,7 @@ interface StartScreenProps {
   userProfile: UserProfile | null;
   onOpenShop: () => void;
   onOpenGifts: () => void;
+  onOpenRoadmap: () => void;
 }
 
 export function StartScreen({
@@ -37,6 +38,7 @@ export function StartScreen({
   userProfile,
   onOpenShop,
   onOpenGifts,
+  onOpenRoadmap,
 }: StartScreenProps) {
   const router = useRouter();
 
@@ -50,6 +52,9 @@ export function StartScreen({
           <HeaderButton onClick={onOpenShop} backgroundImage="url('/shop.png')" />
           <HeaderButton onClick={onOpenGifts} backgroundImage="url('/gift.png')" />
         </div>
+        <div className="flex items-start z-10 w-full p-2 justify-between">
+          <HeaderButton onClick={onOpenRoadmap} backgroundImage="url('https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWFBZpvWdRoqXtcNr8msQ4ObBjiV3e20n5JySx')" />
+        </div>
         <div
           className="w-full flex flex-col items-center justify-center h-full text-center px-4"
           style={{ backgroundColor: "transparent" }}
@@ -57,7 +62,7 @@ export function StartScreen({
           <Image
             alt=''
             // src="/start-bg.png"
-            src="https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWQ8y47ZLRuPdtgeifXzOwCB4AF2EnmqyW3ZVo"
+            src="https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWkCroS4xNpESWBGz9gjT1xRYHtIreZaJA3Mu7"
             layout='fill'
             objectFit='cover'
             style={{

@@ -18,7 +18,6 @@ const nextConfig: NextConfig = {
         pathname: '/f/**', // allow all images under /f/
       },
     ],
-
   },
 };
 

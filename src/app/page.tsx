@@ -47,6 +47,7 @@ function GamePageContent() {
     closeOverlay,
     openShopOverlay,
     openGiftsOverlay,
+    openRoadmapOverlay,
   } = useGame();
 
   const [progress, setProgress] = useState(0);
@@ -87,6 +88,7 @@ function GamePageContent() {
             userProfile={userProfile}
             onOpenShop={openShopOverlay}
             onOpenGifts={openGiftsOverlay}
+            onOpenRoadmap={openRoadmapOverlay}
           />
         );
       case 'searching':
