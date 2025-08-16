@@ -105,7 +105,7 @@ export const PlayingScreen = memo(function PlayingScreen({
           }}
         />
 
-        <div className='z-20 flex-col absolute left-5'>
+        <div className='z-20 flex-col absolute top-5 right-5'>
           <Button
             ref={reactionsButtonRef}
             onClick={() => setIsReactionsPopupOpen(prev => !prev)}
