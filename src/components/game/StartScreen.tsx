@@ -1,6 +1,6 @@
 "use client";
 import { InputText } from 'primereact/inputtext';
-import { Suspense } from 'react';
+import { Suspense, memo } from 'react';
 import Image from 'next/image';
 import { UserProfile } from '@/lib';
 import { BattleButton } from '../BattleButton';
@@ -28,7 +28,7 @@ interface StartScreenProps {
   onOpenQuest: () => void;
 }
 
-export function StartScreen({
+export const StartScreen = memo(function StartScreen({
   username,
   setUsername,
   onStartGame,
@@ -121,4 +121,4 @@ export function StartScreen({
       </>
     </Suspense>
   );
-}
+});

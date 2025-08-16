@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 interface LoadingScreenProps {
   connectionMessage: string;
   progress: number;
 }
 
-export const LoadingScreen: React.FC<LoadingScreenProps> = ({ connectionMessage, progress }) => {
+export const LoadingScreen: React.FC<LoadingScreenProps> = memo(({ connectionMessage, progress }) => {
   return (
     <div
       className="flex flex-col items-center justify-center h-full w-full"
@@ -22,4 +22,4 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ connectionMessage,
       </div>
     </div>
   );
-};
+});

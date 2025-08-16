@@ -79,6 +79,9 @@ function GamePageContent() {
         return '/start-bg.png';
       case 'start':
       case 'playing':
+      case 'searching':
+      case 'opponentFound':
+      case 'joining':
         return 'https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWkCroS4xNpESWBGz9gjT1xRYHtIreZaJA3Mu7';
       default:
         return '';
