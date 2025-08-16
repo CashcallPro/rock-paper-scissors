@@ -3,6 +3,7 @@ import { InputText } from 'primereact/inputtext';
 import { Suspense, memo } from 'react';
 import Image from 'next/image';
 import { UserProfile } from '@/lib';
+import { IMAGES } from '@/lib/image-constants';
 import { BattleButton } from '../BattleButton';
 import { HeaderButton } from '../HeaderButton';
 import { useRouter } from 'next/navigation';
@@ -55,32 +56,32 @@ export const StartScreen = memo(function StartScreen({
         <div className="flex items-start z-10 w-full p-2 justify-between gap-4 mt-4">
           {/* Roadmap Button */}
           <div className="flex flex-col items-center bg-black bg-opacity-5 p-2 rounded-lg">
-            <HeaderButton onClick={onOpenRoadmap} backgroundImage="url('https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWFBZpvWdRoqXtcNr8msQ4ObBjiV3e20n5JySx')" />
+            <HeaderButton onClick={onOpenRoadmap} backgroundImage={`url('${IMAGES.ROADMAP_BG}')`} />
             <span className="text-white text-xs mt-1">Roadmap</span>
           </div>
           {/* Gift Button */}
           <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
-            <HeaderButton onClick={onOpenGifts} backgroundImage="url('https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWkh2ikpxNpESWBGz9gjT1xRYHtIreZaJA3Mu7')" />
+            <HeaderButton onClick={onOpenGifts} backgroundImage={`url('${IMAGES.GIFT_BG}')`} />
             <span className="text-white text-xs mt-1">Gift</span>
           </div>
         </div>
         <div className="flex items-start z-10 w-full p-2 justify-between gap-4">
           {/* Shop Button */}
           <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
-            <HeaderButton onClick={onOpenShop} backgroundImage="url('/shop.png')" />
+            <HeaderButton onClick={onOpenShop} backgroundImage={`url('${IMAGES.SHOP}')`} />
             <span className="text-white text-xs mt-1">Shop</span>
           </div>
 
           {/* Shop Button */}
           <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
-            <HeaderButton onClick={onOpenFriends} backgroundImage="url('https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWBcfixi5VL20zUdwJ5Dkotb73Sa8ElYjuCxB4')" />
+            <HeaderButton onClick={onOpenFriends} backgroundImage={`url('${IMAGES.FRIENDS_BG}')`} />
             <span className="text-white text-xs mt-1">Friends</span>
           </div>
         </div>
         <div className="flex items-start z-10 w-full p-2 justify-between gap-4">
           {/* Quest Button */}
           <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
-            <HeaderButton onClick={onOpenQuest} backgroundImage="url('https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWUCM2kH9thzndp9rDx7cfkvlgICFVWXuHR3qb')" />
+            <HeaderButton onClick={onOpenQuest} backgroundImage={`url('${IMAGES.QUESTS_BG}')`} />
             <span className="text-white text-xs mt-1">Quests</span>
           </div>
         </div>
@@ -92,13 +93,13 @@ export const StartScreen = memo(function StartScreen({
           <div className='absolute top-0 w-full flex flex-col items-center justify-center h-full text-center px-4'>
 
             <h1 className='z-10' style={{ color: 'white' }}>Welcome to</h1>
-            <Image src={"https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWDiDMJ0QRj5Y3Tn17qWlMCd6irautIgfHA0PL"} alt='logo' width={200} height={140} className='z-10 mb-8' />
+            <Image src={IMAGES.LOGO} alt='logo' width={200} height={140} className='z-10 mb-8' />
             <BattleButton
               onClick={onStartGame}
               disabled={!isConnected} />
             <div className="flex items-center justify-center text-white z-10">
               <span>10&nbsp;</span>
-              <Image src="/gem.png" alt="gem" width={20} height={20} className="mx-1" />
+              <Image src={IMAGES.GEM} alt="gem" width={20} height={20} className="mx-1" />
               <span>&nbsp;per round</span>
             </div>
             <div className="mt-2" />
@@ -106,10 +107,10 @@ export const StartScreen = memo(function StartScreen({
               onClick={onStartGame}
               disabled={true}
               title="SOON!"
-              backgroundImage="url('/button-yellow.png')" />
+              backgroundImage={`url('${IMAGES.BUTTON_YELLOW}')`} />
             <div className="flex items-center justify-center text-white z-10">
               <span>1&nbsp;</span>
-              <Image src="/ticket.png" alt="ticket" width={20} height={20} className="mx-1" />
+              <Image src={IMAGES.TICKET} alt="ticket" width={20} height={20} className="mx-1" />
               <span>&nbsp;for 5 rounds</span>
             </div>
             {(connectionMessage || userActionMessage) && (

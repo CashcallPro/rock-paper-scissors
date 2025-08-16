@@ -17,6 +17,7 @@ import { GameEndedScreen } from '../components/game/GameEndedScreen'; // Import 
 import Image from 'next/image';
 import { Suspense, useEffect, useState } from 'react';
 import Header from '@/components/Header';
+import { IMAGES } from '@/lib/image-constants';
 
 // Ensure animate-pop is defined in your global CSS if not using a utility for it
 // styles/globals.css or equivalent:
@@ -81,9 +82,9 @@ function GamePageContent() {
       case 'searching':
       case 'opponentFound':
       case 'joining':
-        return 'https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWkCroS4xNpESWBGz9gjT1xRYHtIreZaJA3Mu7';
+        return IMAGES.GAME_BG;
       default:
-        return 'https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWkCroS4xNpESWBGz9gjT1xRYHtIreZaJA3Mu7';
+        return IMAGES.GAME_BG;
     }
   };
 
@@ -200,7 +201,7 @@ function GamePageContent() {
                              ${!isConnected ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95'} z-10 top-15`}
             >
               <Image
-                src="/giveup.png" // Path relative to the public folder
+                src={IMAGES.GIVE_UP} // Path relative to the public folder
                 alt="Give Up"
                 width={90} // Specify a base width (adjust as needed)
                 height={40} // Specify a base height (adjust as needed)

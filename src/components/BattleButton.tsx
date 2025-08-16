@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import { IMAGES } from "@/lib/image-constants";
 
 interface BattleButtonProps {
   onClick: () => void;
@@ -9,7 +10,7 @@ interface BattleButtonProps {
   backgroundImage?: string;
 }
 
-export function BattleButton({ onClick, disabled, title = "BATTLE", backgroundImage = "url('/button.png')" }: BattleButtonProps) {
+export function BattleButton({ onClick, disabled, title = "BATTLE", backgroundImage = `url('${IMAGES.BUTTON}')` }: BattleButtonProps) {
   return (
     <button
       onClick={onClick}

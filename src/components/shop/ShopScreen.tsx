@@ -1,18 +1,19 @@
 "use client";
 
 import { ShopItemCard } from "@/components/ShopItemCard";
+import { IMAGES } from "@/lib/image-constants";
 import { useUser } from "@/context/UserContext";
 
 const gems = [
-  { icon: "/shopgem1.png", amount: "100 Gems", price: "$0.99" },
-  { icon: "/shopgem2.png", amount: "500 Gems", price: "$4.99" },
-  { icon: "/shopgem3.png", amount: "1200 Gems", price: "$9.99" },
+  { icon: IMAGES.SHOP_GEM_1, amount: "100 Gems", price: "$0.99" },
+  { icon: IMAGES.SHOP_GEM_2, amount: "500 Gems", price: "$4.99" },
+  { icon: IMAGES.SHOP_GEM_3, amount: "1200 Gems", price: "$9.99" },
 ];
 
 const tickets = [
-  { icon: "/ticket.png", amount: "10 Tickets", price: "100 Gems" },
-  { icon: "/ticket.png", amount: "50 Tickets", price: "450 Gems" },
-  { icon: "/ticket.png", amount: "120 Tickets", price: "1000 Gems" },
+  { icon: IMAGES.TICKET, amount: "10 Tickets", price: "100 Gems" },
+  { icon: IMAGES.TICKET, amount: "50 Tickets", price: "450 Gems" },
+  { icon: IMAGES.TICKET, amount: "120 Tickets", price: "1000 Gems" },
 ];
 
 interface ShopScreenProps {
@@ -28,7 +29,7 @@ export default function ShopScreen({ onBack }: ShopScreenProps) {
         <div className="flex items-center">
           <button onClick={onBack} className="mr-3">
             <div className="flex flex-row items-center">
-              <img src="/back-arrow.svg" alt="Back" className="w-6 h-6" />
+              <img src={IMAGES.BACK_ARROW} alt="Back" className="w-6 h-6" />
               <span className="ml-2">Back</span>
             </div>
           </button>

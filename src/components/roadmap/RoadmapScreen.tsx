@@ -1,5 +1,7 @@
 "use client";
 
+import { IMAGES } from "@/lib/image-constants";
+
 interface RoadmapItem {
   title: string;
   description: string;
@@ -71,7 +73,7 @@ export default function RoadmapScreen({ onBack }: RoadmapScreenProps) {
         <div className="flex items-center">
           <button onClick={onBack} className="mr-3">
             <div className="flex flex-row items-center">
-              <img src="/back-arrow.svg" alt="Back" className="w-6 h-6" />
+              <img src={IMAGES.BACK_ARROW} alt="Back" className="w-6 h-6" />
               <span className="ml-2">Back</span>
             </div>
           </button>

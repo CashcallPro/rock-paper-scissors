@@ -1,13 +1,14 @@
 "use client";
 
 import Image from 'next/image';
+import { IMAGES } from '@/lib/image-constants';
 
 const mockFriends = [
-  { id: 1, name: 'Alice', photo: 'https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWBcfixi5VL20zUdwJ5Dkotb73Sa8ElYjuCxB4' },
-  { id: 2, name: 'Bob', photo: 'https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWBcfixi5VL20zUdwJ5Dkotb73Sa8ElYjuCxB4' },
-  { id: 3, name: 'Charlie', photo: 'https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWBcfixi5VL20zUdwJ5Dkotb73Sa8ElYjuCxB4' },
-  { id: 4, name: 'Diana', photo: 'https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWBcfixi5VL20zUdwJ5Dkotb73Sa8ElYjuCxB4' },
-  { id: 5, name: 'Eve', photo: 'https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWBcfixi5VL20zUdwJ5Dkotb73Sa8ElYjuCxB4' },
+  { id: 1, name: 'Alice', photo: IMAGES.FRIENDS_BG },
+  { id: 2, name: 'Bob', photo: IMAGES.FRIENDS_BG },
+  { id: 3, name: 'Charlie', photo: IMAGES.FRIENDS_BG },
+  { id: 4, name: 'Diana', photo: IMAGES.FRIENDS_BG },
+  { id: 5, name: 'Eve', photo: IMAGES.FRIENDS_BG },
 ];
 
 interface FriendsScreenProps {
@@ -21,7 +22,7 @@ export default function FriendsScreen({ onBack }: FriendsScreenProps) {
         <div className="flex items-center">
           <button onClick={onBack} className="mr-3">
             <div className="flex flex-row items-center">
-              <img src="/back-arrow.svg" alt="Back" className="w-6 h-6" />
+              <img src={IMAGES.BACK_ARROW} alt="Back" className="w-6 h-6" />
               <span className="ml-2">Back</span>
             </div>
           </button>
