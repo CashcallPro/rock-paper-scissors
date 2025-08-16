@@ -157,17 +157,20 @@ function GamePageContent() {
             <button
               onClick={handleEndGame}
               disabled={!isConnected} // Apply disabled state to the button wrapper
-              className={`focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform duration-150 ease-in-out
+              className={`relative focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform duration-150 ease-in-out
                              ${!isConnected ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95'} z-10`}
             >
               <Image
-                src="/giveup.png" // Path relative to the public folder
-                alt="Start Game"
+                src="/btn-giveup.svg" // Path relative to the public folder
+                alt="Give Up"
                 width={90} // Specify a base width (adjust as needed)
                 height={40} // Specify a base height (adjust as needed)
                 className={`object-contain ${!isConnected ? '' : 'cursor-pointer'} z-10`}
                 priority // If it's an LCP element
               />
+              <div className="absolute inset-0 flex items-center justify-center z-10">
+                <span className="text-white font-bold text-sm pointer-events-none">GIVE UP</span>
+              </div>
             </button>
           </div>
         )}
