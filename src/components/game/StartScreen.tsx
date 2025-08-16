@@ -48,12 +48,22 @@ export function StartScreen({
         <Header
           user={userProfile}
         />
-        <div className="flex items-start z-10 w-full p-2 justify-between">
-          <HeaderButton onClick={onOpenShop} backgroundImage="url('/shop.png')" />
-          <HeaderButton onClick={onOpenGifts} backgroundImage="url('/gift.png')" />
-        </div>
-        <div className="flex items-start z-10 w-full p-2 justify-between">
-          <HeaderButton onClick={onOpenRoadmap} backgroundImage="url('https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWFBZpvWdRoqXtcNr8msQ4ObBjiV3e20n5JySx')" />
+        <div className="flex items-start z-10 w-full p-2 justify-center gap-4">
+          {/* Shop Button */}
+          <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
+            <HeaderButton onClick={onOpenShop} backgroundImage="url('/shop.png')" />
+            <span className="text-white text-xs mt-1">Shop</span>
+          </div>
+          {/* Gift Button */}
+          <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
+            <HeaderButton onClick={onOpenGifts} backgroundImage="url('/gift.png')" />
+            <span className="text-white text-xs mt-1">Gift</span>
+          </div>
+          {/* Roadmap Button */}
+          <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
+            <HeaderButton onClick={onOpenRoadmap} backgroundImage="url('https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWFBZpvWdRoqXtcNr8msQ4ObBjiV3e20n5JySx')" />
+            <span className="text-white text-xs mt-1">Roadmap</span>
+          </div>
         </div>
         <div
           className="w-full flex flex-col items-center justify-center h-full text-center px-4"
