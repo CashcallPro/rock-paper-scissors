@@ -23,18 +23,20 @@ export default function ShopScreen({ onBack }: ShopScreenProps) {
   const { userProfile } = useUser();
 
   return (
-    <div className="bg-gray-800 min-h-screen text-white w-full flex flex-col">
+    <div className="bg-gray-800 h-screen text-white w-full flex flex-col">
       <div className="w-full bg-gray-800 text-white p-2 flex items-center justify-between sticky top-0 z-20">
         <div className="flex items-center">
           <button onClick={onBack} className="mr-3">
-            <div className='flex flex-row items-center'>
+            <div className="flex flex-row items-center">
               <img src="/back-arrow.svg" alt="Back" className="w-6 h-6" />
               <span className="ml-2">Back</span>
             </div>
           </button>
         </div>
       </div>
-      <main className="p-4 flex-grow">
+
+      {/* 🔧 Make this scrollable */}
+      <main className="p-4 flex-grow overflow-y-auto scrollbar-hide">
         <h1 className="text-4xl font-bold text-center mb-8">Shop</h1>
         <div className="flex justify-center gap-8">
           {/* Gems Column */}

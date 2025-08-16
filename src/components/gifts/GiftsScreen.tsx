@@ -18,7 +18,7 @@ export default function GiftsScreen({ onBack }: GiftsScreenProps) {
   const { userProfile } = useUser();
 
   return (
-    <div className="bg-gray-800 min-h-screen text-white w-full flex flex-col">
+    <div className="bg-gray-800 min-h-screen text-white w-full flex flex-col ">
       <div className="w-full bg-gray-800 text-white p-2 flex items-center justify-between sticky top-0 z-20">
         <div className="flex items-center">
           <button onClick={onBack} className="mr-3">
@@ -29,7 +29,7 @@ export default function GiftsScreen({ onBack }: GiftsScreenProps) {
           </button>
         </div>
       </div>
-      <main className="p-4 flex-grow">
+      <main className="p-4 flex-grow overflow-y-auto scrollbar-hide">
         <h1 className="text-4xl font-bold text-center mb-8">Gifts</h1>
         <div className="flex flex-col items-center gap-4">
           {gifts.map((item, index) => (

@@ -57,7 +57,7 @@ export function StartScreen({
           <Image
             alt=''
             // src="/start-bg.png"
-            src="https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWLNeh8UcS2TXZQmotuIlGziCbOfrqMU0yeN9A"
+            src="https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWQ8y47ZLRuPdtgeifXzOwCB4AF2EnmqyW3ZVo"
             layout='fill'
             objectFit='cover'
             style={{
