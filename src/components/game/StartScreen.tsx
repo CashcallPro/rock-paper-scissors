@@ -67,7 +67,11 @@ export function StartScreen({
           <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
             <HeaderButton onClick={onOpenShop} backgroundImage="url('/shop.png')" />
             <span className="text-white text-xs mt-1">Shop</span>
-          <HeaderButton onClick={onOpenFriends} backgroundImage="url('/globe.svg')" />
+          </div>
+
+          {/* Shop Button */}
+          <div className="flex flex-col items-center bg-black bg-opacity-50 p-2 rounded-lg">
+            <HeaderButton onClick={onOpenFriends} backgroundImage="url('https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWBcfixi5VL20zUdwJ5Dkotb73Sa8ElYjuCxB4')" />
             <span className="text-white text-xs mt-1">Friends</span>
           </div>
         </div>

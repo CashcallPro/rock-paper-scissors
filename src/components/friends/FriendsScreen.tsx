@@ -3,11 +3,11 @@
 import Image from 'next/image';
 
 const mockFriends = [
-  { id: 1, name: 'Alice', photo: 'https://i.pravatar.cc/150?u=a042581f4e29026704d' },
-  { id: 2, name: 'Bob', photo: 'https://i.pravatar.cc/150?u=a042581f4e29026704e' },
-  { id: 3, name: 'Charlie', photo: 'https://i.pravatar.cc/150?u=a042581f4e29026704f' },
-  { id: 4, name: 'Diana', photo: 'https://i.pravatar.cc/150?u=a042581f4e29026704g' },
-  { id: 5, name: 'Eve', photo: 'https://i.pravatar.cc/150?u=a042581f4e29026704h' },
+  { id: 1, name: 'Alice', photo: 'https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWBcfixi5VL20zUdwJ5Dkotb73Sa8ElYjuCxB4' },
+  { id: 2, name: 'Bob', photo: 'https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWBcfixi5VL20zUdwJ5Dkotb73Sa8ElYjuCxB4' },
+  { id: 3, name: 'Charlie', photo: 'https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWBcfixi5VL20zUdwJ5Dkotb73Sa8ElYjuCxB4' },
+  { id: 4, name: 'Diana', photo: 'https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWBcfixi5VL20zUdwJ5Dkotb73Sa8ElYjuCxB4' },
+  { id: 5, name: 'Eve', photo: 'https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmWBcfixi5VL20zUdwJ5Dkotb73Sa8ElYjuCxB4' },
 ];
 
 interface FriendsScreenProps {
