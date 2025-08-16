@@ -152,16 +152,16 @@ function GamePageContent() {
 
       <div className={`w-full flex flex-col items-center ${gamePhase === 'playing' ? 'justify-between' : 'justify-center flex-grow'} z-10`} style={{ height: screenHeight }}>
         {/* Exit Game button can be part of the main layout or conditional */}
-        {gamePhase !== 'start' && gamePhase !== 'loading' &&  ( // Show Exit button only when not in start phase
+        {(gamePhase === 'searching' || gamePhase === 'playing') && ( // Show Exit button only when not in start phase
           <div className='w-full flex justify-start p-4 absolute top-0 left-0 z-11'>
             <button
               onClick={handleEndGame}
               disabled={!isConnected} // Apply disabled state to the button wrapper
               className={`relative focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform duration-150 ease-in-out
-                             ${!isConnected ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95'} z-10`}
+                             ${!isConnected ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95'} z-10 top-15`}
             >
               <Image
-                src="/btn-giveup.svg" // Path relative to the public folder
+                src="/giveup.png" // Path relative to the public folder
                 alt="Give Up"
                 width={90} // Specify a base width (adjust as needed)
                 height={40} // Specify a base height (adjust as needed)
