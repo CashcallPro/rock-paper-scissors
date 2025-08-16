@@ -31,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({ user, variant = 'default' }) => {
 
   return (
     <>
-      <div className="w-full bg-gray-800 text-white p-2 flex items-center justify-between sticky top-0 z-20">
+      <div className="w-full bg-black/60 text-white p-2 flex items-center justify-between sticky top-0 z-20">
         <div className="flex items-center">
           {variant === 'back' ? (
             <button onClick={goBack} className="mr-3">

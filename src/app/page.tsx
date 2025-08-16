@@ -184,7 +184,7 @@ function GamePageContent() {
             right: 0,
             bottom: 0,
             zIndex: 0,
-            filter: gamePhase === 'start' ? 'brightness(0.6)' : 'none',
+            filter: gamePhase === 'start' ? 'brightness(0.8)' : 'none',
           }}
         />
       )}

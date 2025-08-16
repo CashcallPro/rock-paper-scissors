@@ -17,7 +17,7 @@ export const GameEndedScreen: React.FC<GameEndedScreenProps> = ({
 }) => {
   return (
     <div className="flex flex-col items-center justify-center h-screen w-full text-white p-4">
-      <div className="bg-gray-700 shadow-xl rounded-lg p-6 md:p-8 w-full max-w-md text-center">
+      <div className="bg-gray-700/70 shadow-xl rounded-lg p-6 md:p-8 w-full max-w-md text-center">
         <h1 className="text-4xl font-bold mb-6 text-yellow-400">Game Over</h1>
 
         <p className="text-xl mb-4 text-gray-300">{reason}</p>

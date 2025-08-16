@@ -60,7 +60,7 @@ const PlayingHeader: React.FC<PlayingHeaderProps> = ({ user, opponent, userScore
   return (
     <div className="w-full bg-gray-800 text-white p-2 flex items-center justify-between sticky top-0 z-20">
       {renderUserProfile(user)}
-      <div className="flex items-center text-lg font-bold">
+      <div className="flex items-center text-lg font-bold text-[#FFC81D]">
         <span>{userScore}</span>
         <span className="mx-2">-</span>
         <span>{opponentScore}</span>

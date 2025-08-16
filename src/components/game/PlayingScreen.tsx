@@ -91,13 +91,18 @@ export const PlayingScreen = memo(function PlayingScreen({
 
       <div className="flex-grow w-full flex flex-col items-center justify-center space-y-1 sm:space-y-2 py-1 sm:py-2">
 
-        <div className='z-20 flex-col absolute top-20 right-2'>
+        <div className='z-20 flex-col absolute top-19 right-2'>
           <Button
             ref={reactionsButtonRef}
             onClick={() => setIsReactionsPopupOpen(prev => !prev)}
             className="bg-gray-800 text-white p-2 rounded-full"
           >
-            <span className="text-3xl">😀</span>
+            <Image
+              height={34}
+              width={34}
+              src={"https://s3dux5rwcu.ufs.sh/f/3pYCTPyYdTmW4hk5JXZQKCsSAxzqmIEXfFjeBuagkiWrlPp9"}
+              alt=''
+            />
           </Button>
           <ReactionsPopup
             isOpen={isReactionsPopupOpen}
@@ -115,7 +120,7 @@ export const PlayingScreen = memo(function PlayingScreen({
             isOpponent
           />
 
-          <div className="z-10 text-lg sm:text-xl font-medium h-auto min-h-[24px] text-white sm:min-h-[28px] my-1 sm:my-2 text-center px-2">
+          <div className="z-10 text-lg sm:text-xl font-medium h-auto min-h-[64px] text-white sm:min-h-[52px] my-1 sm:my-2 text-center px-2 items-center justify-center">
             {(() => {
               if (!roundResult) {
                 return roundStatusMessage || <>&nbsp;</>;
