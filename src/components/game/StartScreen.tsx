@@ -75,7 +75,7 @@ export function StartScreen({
             }}
           />
           <h1 className='z-10' style={{ color: 'white' }}>Welcome to</h1>
-          <Image src={"/logo_rpstitan.png"} alt='logo' width={200} height={140} className='z-10 mb-16' />
+          <Image src={"/logo_rpstitan.png"} alt='logo' width={200} height={140} className='z-10 mb-8' />
           <BattleButton
             onClick={onStartGame}
             disabled={!isConnected} />
